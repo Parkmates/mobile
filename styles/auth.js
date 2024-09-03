@@ -31,12 +31,4 @@ export const authStyles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 15,
   },
-  submitText: {
-    color: "#717171",
-    fontWeight: "bold",
-  },
-  submitTextHighlight: {
-    color: "#ffff",
-    fontWeight: "bold",
-  },
 });
