@@ -15,8 +15,6 @@ export default function ParkList() {
           alignItems: "start",
           gap: 10,
           padding: 20,
-          paddingLeft: 10,
-          paddingRight: 10,
           backgroundColor: "#F3F4F5",
           borderRadius: 10,
           marginBottom: 20,
