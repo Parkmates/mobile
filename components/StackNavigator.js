@@ -6,6 +6,7 @@ import ProfilePage from "../pages/ProfilePage";
 import TabNavigator from "./TabNavigator";
 import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
+import DetailParkingSpot from "../pages/DetailParkingSpot";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,11 @@ const StackNavigator = () => {
         name="TabNavigator"
         component={TabNavigator}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        options={{ presentation: "modal", headerShown: false }}
+        name="DetailParking"
+        component={DetailParkingSpot}
       />
       {/* <Stack.Screen name='Profile' component={ProfilePage} options={{ headerShown: false }}/> */}
     </Stack.Navigator>
