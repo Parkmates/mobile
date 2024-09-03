@@ -70,7 +70,7 @@ export default function ListParkingPage() {
               </ScrollView>
             </>
           )} */}
-          <ScrollView style={{ width: "100%", marginBottom: 80 }}>
+          <ScrollView style={{ width: "100%", marginBottom: 110 }}>
             <ParkList />
             <ParkList />
             <ParkList />
