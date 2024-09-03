@@ -5,6 +5,7 @@ import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import TabNavigator from "./TabNavigator";
 import RegisterPage from "../pages/RegisterPage";
+import LoginPage from "../pages/LoginPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,11 @@ const StackNavigator = () => {
       <Stack.Screen
         name="Register"
         component={RegisterPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginPage}
         options={{ headerShown: false }}
       />
       <Stack.Screen
