@@ -24,7 +24,7 @@ const HomeActiveBooking = () => {
       <View style={styles.rightContainer}>
         <View>
           <Text style={styles.name}>Central Park Mall GF</Text>
-          <Hr pad={8} />
+          {/* <Hr pad={8} /> */}
           <View style={styles.addressContainer}>
             <View style={styles.containerAddressInside}>
               <Text style={styles.address}>Vehicle</Text>

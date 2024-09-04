@@ -8,7 +8,7 @@ import AdsComponents from "../components/AdsComponents";
 
 const HomePage = () => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <HomeSearchBar />
       <CarouselBanner />
       <View style={styles.containerYourBooking}>
@@ -20,7 +20,7 @@ const HomePage = () => {
         <View style={styles.bestContainer}>
           <BestSpotCard />
           <BestSpotCard />
-          {/* <BestSpotCard /> */}
+          <BestSpotCard />
         </View>
       </View>
       <View style={styles.containerYourBooking}>
