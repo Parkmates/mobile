@@ -8,12 +8,13 @@ import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
 import DetailParkingSpot from "../pages/DetailParkingSpot";
 import ConfirmationBookingPage from "../pages/ConfirmationBookingPage";
+import PaymentPage from "../pages/PaymentPage";
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="DetailParking" options={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="TabNavigator" options={{ headerShown: false }}>
       {/* <Stack.Screen
         name="Register"
         component={RegisterPage}
@@ -38,6 +39,11 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
         name="ConfirmationBooking"
         component={ConfirmationBookingPage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="PaymentPage"
+        component={PaymentPage}
       />
       {/* <Stack.Screen name='Profile' component={ProfilePage} options={{ headerShown: false }}/> */}
     </Stack.Navigator>

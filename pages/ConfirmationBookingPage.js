@@ -1,7 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import Hr from "../components/Hr";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import MidtransView from "../components/MidtransView";
+import WebView from "react-native-webview";
 
 const ConfirmationBookingPage = ({ navigation }) => {
   return (
@@ -16,7 +19,9 @@ const ConfirmationBookingPage = ({ navigation }) => {
         <Hr pad={16} />
         <View style={styles.containerDescription}>
           <View style={styles.containerDescriptionDetail}>
-            <Text style={[styles.leftDescription, { marginRight: 42 }]}>Parking Spot</Text>
+            <Text style={[styles.leftDescription, { marginRight: 42 }]}>
+              Parking Spot
+            </Text>
             <Text style={styles.rightDescription}>Central Park Mall GF</Text>
           </View>
           {/* <View style={styles.containerDescriptionDetail}>
@@ -25,15 +30,18 @@ const ConfirmationBookingPage = ({ navigation }) => {
             <Text style={styles.rightDescription}>Jalan BlaBlaBlaBla BlaBlaBlaBla BlaBlaBlaBla BlaBlaBlaBla BlaBlaBlaBla BlaBlaBlaBla BlaBlaBlaBlaBlaBlaBlaBla</Text>
           </View> */}
           <View style={styles.containerDescriptionDetail}>
-            <Text style={[styles.leftDescription, { marginRight: 42 }]}>Time</Text>
+            <Text style={[styles.leftDescription, { marginRight: 42 }]}>
+              Time
+            </Text>
             <Text style={styles.rightDescription}>
               09:00 pm, 31 February, 2024
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('PaymentPage')}>
           <Text style={styles.btnText}>Continue to Payment</Text>
         </TouchableOpacity>
+
         <View style={styles.infoContainer}>
           <View>
             <Text
@@ -93,12 +101,12 @@ const styles = StyleSheet.create({
   },
   containerDescription: {
     gap: 6,
-    width: '100%',
+    width: "100%",
   },
   containerDescriptionDetail: {
     justifyContent: "space-between",
     flexDirection: "row",
-    width: '100%'
+    width: "100%",
   },
   containerLeft: {
     gap: 4,
@@ -113,7 +121,7 @@ const styles = StyleSheet.create({
   },
   rightDescription: {
     fontSize: 16,
-    textAlign: 'right',
+    textAlign: "right",
   },
   btn: {
     backgroundColor: "#007BFF",
@@ -132,4 +140,8 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 10,
   },
+  BottomSheet: {
+    backgroundColor: "rgba(0, 0, 0, 0.35)",
+  },
+  
 });
