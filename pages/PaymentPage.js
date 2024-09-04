@@ -16,7 +16,7 @@ const PaymentPage = ({ navigation }) => {
       // Tutup WebView
     //   setIsOpen(false);
       // Arahkan ke halaman sukses atau lainnya
-      navigation.navigate("TabNavigator");
+      navigation.navigate("ThankYouAndReview");
     }
   };
   return (
