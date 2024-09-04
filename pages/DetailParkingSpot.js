@@ -2,6 +2,7 @@ import {
   Button,
   Dimensions,
   Image,
+  Modal,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -96,7 +97,10 @@ export default function DetailParkingSpot({ navigation }) {
             alignItems: "center",
             justifyContent: "center",
           }}
-          onPress={() => navigation.navigate("ConfirmationBooking")}
+          onPress={() => {
+            navigation.goBack();
+            navigation.navigate("ConfirmationBooking");
+          }}
         >
           <Text style={{ color: "white" }}>
             Book Now

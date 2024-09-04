@@ -9,6 +9,7 @@ import LoginPage from "../pages/LoginPage";
 import DetailParkingSpot from "../pages/DetailParkingSpot";
 import ConfirmationBookingPage from "../pages/ConfirmationBookingPage";
 import PaymentPage from "../pages/PaymentPage";
+import ThankYouAndReviewPage from "../pages/ThankYouAndReviewPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,11 +24,17 @@ const StackNavigator = () => {
       <Stack.Screen
         name="Login"
         component={LoginPage}
-        options={{ headerShown: false }}
+        options={{ 
+        headerShown: false }}
       /> */}
       <Stack.Screen
         name="TabNavigator"
         component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ThankYouAndReview"
+        component={ThankYouAndReviewPage}
         options={{ headerShown: false }}
       />
       <Stack.Screen
