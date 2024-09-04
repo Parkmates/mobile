@@ -30,13 +30,13 @@ const StackNavigator = () => {
         headerShown: false }}
       /> */}
       <Stack.Screen
-        name="ThankYouAndReview"
-        component={ThankYouAndReviewPage}
+        name="TabNavigator"
+        component={TabNavigator}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="TabNavigator"
-        component={TabNavigator}
+        name="ThankYouAndReview"
+        component={ThankYouAndReviewPage}
         options={{ headerShown: false }}
       />
       <Stack.Screen
