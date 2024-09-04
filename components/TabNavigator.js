@@ -11,7 +11,7 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   return (
-    <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+    <Tab.Navigator initialRouteName="Book" tabBar={(props) => <TabBar {...props} />}>
       <Tab.Screen
         name="Home"
         component={HomePage}
