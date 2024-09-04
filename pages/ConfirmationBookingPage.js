@@ -1,7 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import Hr from "../components/Hr";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import MidtransView from "../components/MidtransView";
+import WebView from "react-native-webview";
 
 const ConfirmationBookingPage = ({ navigation }) => {
   return (
@@ -35,12 +38,10 @@ const ConfirmationBookingPage = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("ThankYouAndReview")}
-          style={styles.btn}
-        >
+        <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('PaymentPage')}>
           <Text style={styles.btnText}>Continue to Payment</Text>
         </TouchableOpacity>
+
         <View style={styles.infoContainer}>
           <View>
             <Text
@@ -139,4 +140,8 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 10,
   },
+  BottomSheet: {
+    backgroundColor: "rgba(0, 0, 0, 0.35)",
+  },
+  
 });
