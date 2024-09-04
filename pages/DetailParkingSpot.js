@@ -10,7 +10,7 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ListReview from "../components/ListReview";
 
-export default function DetailParkingSpot() {
+export default function DetailParkingSpot({ navigation }) {
   const { width } = Dimensions.get("window");
   return (
     <View style={{ flex: 1, gap: 20 }}>
@@ -96,6 +96,7 @@ export default function DetailParkingSpot() {
             alignItems: "center",
             justifyContent: "center",
           }}
+          onPress={() => navigation.navigate("ConfirmationBooking")}
         >
           <Text style={{ color: "white" }}>
             Book Now

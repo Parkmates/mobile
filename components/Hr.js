@@ -5,7 +5,7 @@ const Hr = ({ pad }) => {
   return (
     <View>
       <View style={{ marginTop: pad }} />
-      <View style={{ height: 1, backgroundColor: "#222" }}></View>
+      <View style={{ height: 1, backgroundColor: "#e2e2e2" }}></View>
       <View style={{ marginBottom: pad }}/>
     </View>
   );
