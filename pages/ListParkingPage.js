@@ -47,7 +47,6 @@ export default function ListParkingPage() {
                 style={{
                   flex: 1,
                   height: 40,
-                  color: "white",
                   paddingLeft: 10,
                 }}
                 placeholder="Search"
