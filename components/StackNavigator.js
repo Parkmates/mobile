@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="DetailParking"
+      initialRouteName="TabNavigator"
       options={{ headerShown: false }}
     >
       {/* <Stack.Screen
