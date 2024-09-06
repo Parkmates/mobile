@@ -5,8 +5,9 @@ import CarouselBanner from "../components/CarouselBanner";
 import HomeActiveBooking from "../components/HomeActiveBooking";
 import BestSpotCard from "../components/BestSpotCard";
 import AdsComponents from "../components/AdsComponents";
-
+import * as SecureStore from 'expo-secure-store';
 const HomePage = () => {
+  // console.log(SecureStore.getItem('access_token'))
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <HomeSearchBar />

@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { authStyles } from "../styles/auth";
+import { api } from "../utils/axios";
+import Toast from "react-native-toast-message";
 export default function RegisterPage({ navigation }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -24,18 +26,37 @@ export default function RegisterPage({ navigation }) {
 
   const handleSubmit = async () => {
     try {
-      console.log(formData);
+      // console.log(formData);
+
+      const { data } = await api({
+        method: "POST",
+        url: "/api/register",
+        data: JSON.stringify(formData),
+      });
 
       formData.name = "";
       formData.username = "";
       formData.email = "";
       formData.password = "";
 
-      navigation.navigate("Login");
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Register Success, Please Login",
+        topOffset: 50,
+      });
+
+      navigation.replace("Login");
     } catch (error) {
-      Alert.alert("Opps...", error.message, [
-        { text: "OK", onPress: () => console.log("OK Pressed") },
-      ]);
+      // Alert.alert("Opps...", error.msg, [
+      //   { text: "OK", onPress: () => console.log("OK Pressed") },
+      // ]);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.response.data.msg,
+        topOffset: 50,
+      });
     }
   };
 

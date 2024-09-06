@@ -10,9 +10,11 @@ import {
 } from "react-native";
 import { authStyles } from "../styles/auth";
 import { useState } from "react";
+import { api } from "../utils/axios";
 // import { useContext, useState } from "react";
 // import { AuthContext } from "../context/Auth";
-// import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
 
 export default function LoginPage({ navigation }) {
   // const { setIsLogin } = useContext(AuthContext);
@@ -28,13 +30,32 @@ export default function LoginPage({ navigation }) {
 
   const handleSubmit = async () => {
     try {
-      console.log(formData);
-      // await SecureStore.setItemAsync("token", result.data.login);
-      // setIsLogin(true);
+      // console.log(formData);
+      const { data } = await api({
+        method: "POST",
+        url: "/api/login",
+        data: JSON.stringify(formData),
+      });
+      console.log(data);
+      await SecureStore.setItemAsync("access_token", data.access_token);
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Login Success",
+        topOffset: 50,
+      });
+      navigation.replace("TabNavigator");
     } catch (error) {
-      Alert.alert("Opps...", error.message, [
-        { text: "OK", onPress: () => console.log("OK Pressed") },
-      ]);
+      // Alert.alert("Opps...", error.message, [
+      //   { text: "OK", onPress: () => console.log("OK Pressed") },
+      // ]);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.response.data.msg,
+        topOffset: 50,
+      });
+      // console.log(error.response.data.msg);
     }
   };
   return (
