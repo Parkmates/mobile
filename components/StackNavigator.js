@@ -10,12 +10,18 @@ import DetailParkingSpot from "../pages/DetailParkingSpot";
 import ConfirmationBookingPage from "../pages/ConfirmationBookingPage";
 import PaymentPage from "../pages/PaymentPage";
 import ThankYouAndReviewPage from "../pages/ThankYouAndReviewPage";
+import SplashScreen from "../pages/SplashScreen";
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="TabNavigator" options={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="Splash" options={{ headerShown: false }}>
+      <Stack.Screen
+        name="Splash"
+        component={SplashScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="Register"
         component={RegisterPage}
