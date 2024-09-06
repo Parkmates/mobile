@@ -3,12 +3,12 @@ import React from "react";
 import HomeActiveBooking from "../components/HomeActiveBooking";
 import ParkingHistory from "../components/ParkingHistory";
 
-const BookPage = () => {
+const BookPage = ({ navigation }) => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.containerActive}>
         <Text style={styles.yourBooking}>Your Booking</Text>
-        <HomeActiveBooking />
+        <HomeActiveBooking onPress={() => navigation.navigate("BookingDetail")} />
       </View>
       <Text style={[styles.yourBooking, { marginTop: 24, paddingHorizontal: 24 }]}>
         Booking History

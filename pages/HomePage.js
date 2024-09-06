@@ -18,7 +18,7 @@ const HomePage = ({ navigation }) => {
       <CarouselBanner />
       <View style={styles.containerYourBooking}>
         <Text style={styles.yourBooking}>Your Booking</Text>
-        <HomeActiveBooking />
+        <HomeActiveBooking onPress={() => navigation.navigate("BookingDetail")} />
       </View>
       <View style={styles.containerYourBooking}>
         <View style={styles.titleWrapper}>

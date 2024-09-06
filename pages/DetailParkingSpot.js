@@ -15,6 +15,7 @@ import { useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import ChooseParkingSpot from "../components/ChooseParkingSpot";
+import Hr from "../components/Hr";
 
 export default function DetailParkingSpot({ navigation }) {
   const { width } = Dimensions.get("window");
@@ -154,7 +155,7 @@ export default function DetailParkingSpot({ navigation }) {
               justifyContent: "center",
             }}
             onPress={() => {
-              navigation.goBack();
+              // navigation.goBack();
               navigation.navigate("ConfirmationBooking");
             }}
           >
@@ -177,7 +178,7 @@ export default function DetailParkingSpot({ navigation }) {
           snapPoints={["80%"]}
           enablePanDownToClose={true}
           onClose={() => setIsOpen(false)}
-          backgroundStyle={{ backgroundColor: "#e2e2e2" }}
+          // backgroundStyle={{ backgroundColor: "rgba(255, 255, 255, 0.75)" }}
           style={{ elevation: 10 }}
         >
           <BottomSheetScrollView
@@ -187,13 +188,14 @@ export default function DetailParkingSpot({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                paddingHorizontal: 20,
+                paddingBottom: 10,
                 textAlign: "center",
-                fontSize: 18,
+                fontSize: 16,
               }}
             >
-              REVIEW
+              Review
             </Text>
+            <Hr/>
             <ListReview />
             <ListReview />
             <ListReview />

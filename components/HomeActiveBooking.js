@@ -4,7 +4,7 @@ import Hr from "./Hr";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 
-const HomeActiveBooking = ({ type }) => {
+const HomeActiveBooking = ({ type, onPress }) => {
   return (
     // if empty
     // <TouchableOpacity style={styles.containerEmpty}>
@@ -13,7 +13,7 @@ const HomeActiveBooking = ({ type }) => {
     //     <Text style={styles.bookNowText}>Book Now</Text>
     //   </TouchableOpacity>
     // </TouchableOpacity>
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.innerContainerTop}>
         <Image
           source={{
