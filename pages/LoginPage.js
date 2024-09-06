@@ -36,7 +36,7 @@ export default function LoginPage({ navigation }) {
         url: "/api/login",
         data: JSON.stringify(formData),
       });
-      console.log(data);
+      // console.log(data);
       await SecureStore.setItemAsync("access_token", data.access_token);
       Toast.show({
         type: "success",
