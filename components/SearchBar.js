@@ -2,15 +2,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { User } from 'react-native-feather'
 
-const HomeSearchBar = () => {
+const HomeSearchBar = ({ onPressSearch, onPressProfile }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.searchBar}>
+      <TouchableOpacity style={styles.searchBar} onPress={onPressSearch}>
         <Text style={styles.searchText}>
             Search Here
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.profileIcon}>
+      <TouchableOpacity style={styles.profileIcon} onPress={onPressProfile}>
         <User size={24}  color={'#000'}/>
       </TouchableOpacity>
     </View>

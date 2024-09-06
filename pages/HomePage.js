@@ -5,19 +5,28 @@ import CarouselBanner from "../components/CarouselBanner";
 import HomeActiveBooking from "../components/HomeActiveBooking";
 import BestSpotCard from "../components/BestSpotCard";
 import AdsComponents from "../components/AdsComponents";
-import * as SecureStore from 'expo-secure-store';
-const HomePage = () => {
+import * as SecureStore from "expo-secure-store";
+import { TouchableOpacity } from "react-native-gesture-handler";
+const HomePage = ({ navigation }) => {
   // console.log(SecureStore.getItem('access_token'))
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <HomeSearchBar />
+      <HomeSearchBar
+        onPressSearch={() => navigation.navigate("Park")}
+        onPressProfile={() => navigation.navigate("Profile")}
+      />
       <CarouselBanner />
       <View style={styles.containerYourBooking}>
         <Text style={styles.yourBooking}>Your Booking</Text>
         <HomeActiveBooking />
       </View>
       <View style={styles.containerYourBooking}>
-        <Text style={styles.yourBooking}>Best Parking Spot</Text>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.yourBooking}>Best Parking Spot</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Park")}>
+            <Text style={styles.SeeMore}>See More</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.bestContainer}>
           <BestSpotCard />
           <BestSpotCard />
@@ -51,10 +60,21 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 8,
   },
+  SeeMore: {
+    fontSize: 16,
+    color: "#007BFF",
+    fontWeight: "600",
+    marginBottom: 8,
+  },
   bestContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItemsL: 'center',
-    gap: 8
-  }
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItemsL: "center",
+    gap: 8,
+  },
+  titleWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
 });
