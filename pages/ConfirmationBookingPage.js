@@ -112,9 +112,11 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
             <Text style={[styles.leftDescription, { marginRight: 42 }]}>
               Your Vehicle
             </Text>
-            <Text style={styles.rightDescription}>{spotDetail.type === 'car' ? 'Car' : 'Motorcycle'}</Text>
+            <Text style={styles.rightDescription}>
+              {spotDetail.type === "car" ? "Car" : "Motorcycle"}
+            </Text>
           </View>
-          <View style={styles.containerDescriptionDetail}>
+          {/* <View style={styles.containerDescriptionDetail}>
             <Text style={[styles.leftDescription, { marginRight: 42 }]}>
               Hourly Rate
             </Text>
@@ -126,7 +128,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
               }).format(spotDetail.fee)}
               /hour
             </Text>
-          </View>
+          </View> */}
           {/* <View style={styles.containerDescriptionDetail}>
             <Text style={[styles.leftDescription, { }]}>Address</Text>
             <Text style={[styles.rightDescription, { width: 50 }]}></Text>
@@ -162,24 +164,37 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
                 styles.leftDescription,
                 {
                   textAlign: "center",
-                  marginBottom: 12,
+                  marginBottom: 24,
                   textDecorationLine: "underline",
                 },
               ]}
             >
               Important Information
             </Text>
-            {/* <View style={styles.containerDescriptionDetail}>
+            <View style={styles.containerDescriptionDetail}>
               <View style={styles.containerLeft}>
                 <Text style={styles.leftDescription}>Booking Rate</Text>
                 <Text style={styles.leftDescription}>Hourly Rate</Text>
               </View>
               <View style={styles.containerRight}>
-                <Text style={styles.leftDescription}>Rp. 15.000</Text>
-                <Text style={styles.leftDescription}>Rp. 10.000</Text>
+                <Text style={styles.leftDescription}>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(bookRate)}
+                </Text>
+                <Text style={styles.leftDescription}>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(spotDetail.fee)}
+                  /hour
+                </Text>
               </View>
             </View>
-            <Hr pad={24} /> */}
+            <Hr pad={24} />
             <Text style={[styles.leftDescription, { textAlign: "center" }]}>
               Please do not leave your belongings in the vehicle, be responsible
               for your belongings. Any loss will be the responsibility of the
