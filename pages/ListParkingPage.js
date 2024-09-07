@@ -23,8 +23,8 @@ export default function ListParkingPage() {
             alignItems: "flex-start",
             gap: 30,
             padding: 20,
-            paddingLeft: 10,
-            paddingRight: 10,
+            paddingLeft: 24,
+            paddingRight: 24,
           }}
         >
           <View
@@ -69,7 +69,7 @@ export default function ListParkingPage() {
               </ScrollView>
             </>
           )} */}
-          <ScrollView style={{ width: "100%", marginBottom: 110 }}>
+          <ScrollView style={{ width: "100%" }} showsVerticalScrollIndicator={false}>
             <ParkList />
             <ParkList />
             <ParkList />
@@ -77,6 +77,7 @@ export default function ListParkingPage() {
             <ParkList />
             <ParkList />
             <ParkList />
+            <View style={{ height: 120 }} />
           </ScrollView>
         </View>
       </>

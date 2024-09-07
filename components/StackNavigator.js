@@ -11,6 +11,7 @@ import ConfirmationBookingPage from "../pages/ConfirmationBookingPage";
 import PaymentPage from "../pages/PaymentPage";
 import ThankYouAndReviewPage from "../pages/ThankYouAndReviewPage";
 import SplashScreen from "../pages/SplashScreen";
+import BookingDetail from "../pages/BookingDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,11 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
         name="PaymentPage"
         component={PaymentPage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="BookingDetail"
+        component={BookingDetail}
       />
       {/* <Stack.Screen name='Profile' component={ProfilePage} options={{ headerShown: false }}/> */}
     </Stack.Navigator>

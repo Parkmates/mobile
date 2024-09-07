@@ -4,8 +4,7 @@ import Hr from "./Hr";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 
-const HomeActiveBooking = () => {
-  const data = 'car'
+const HomeActiveBooking = ({ type, onPress }) => {
   return (
     // if empty
     // <TouchableOpacity style={styles.containerEmpty}>
@@ -14,7 +13,7 @@ const HomeActiveBooking = () => {
     //     <Text style={styles.bookNowText}>Book Now</Text>
     //   </TouchableOpacity>
     // </TouchableOpacity>
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.innerContainerTop}>
         <Image
           source={{
@@ -29,7 +28,7 @@ const HomeActiveBooking = () => {
           <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={styles.name}>Central Park Mall GF</Text>
-              {data === "car" ? (
+              {type === "car" ? (
                 <Ionicons
                   name="car"
                   size={26}

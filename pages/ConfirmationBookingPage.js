@@ -24,6 +24,18 @@ const ConfirmationBookingPage = ({ navigation }) => {
             </Text>
             <Text style={styles.rightDescription}>Central Park Mall GF</Text>
           </View>
+          <View style={styles.containerDescriptionDetail}>
+            <Text style={[styles.leftDescription, { marginRight: 42 }]}>
+              Floor
+            </Text>
+            <Text style={styles.rightDescription}>5</Text>
+          </View>
+          <View style={styles.containerDescriptionDetail}>
+            <Text style={[styles.leftDescription, { marginRight: 42 }]}>
+              Area
+            </Text>
+            <Text style={styles.rightDescription}>A1</Text>
+          </View>
           {/* <View style={styles.containerDescriptionDetail}>
             <Text style={[styles.leftDescription, { }]}>Address</Text>
             <Text style={[styles.rightDescription, { width: 50 }]}></Text>
