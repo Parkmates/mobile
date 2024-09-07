@@ -7,13 +7,41 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../styles/global";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import UserList from "../components/UserList";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ParkList from "../components/ParkList";
+import { api } from "../utils/axios";
+import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
 
-export default function ListParkingPage() {
+export default function ListParkingPage({ navigation }) {
   const [keyword, setKeyword] = useState("");
+  const [parkSpot, setParkSpot] = useState([]);
+
+  const getData = async () => {
+    try {
+      const { data } = await api({
+        url: "/api/parkspot",
+        headers: {
+          Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
+        },
+      });
+      // console.log(data)
+      setParkSpot(data);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.response.msg,
+        topOffset: 50,
+      });
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [])
   return (
     <SafeAreaView style={globalStyles.container}>
       <>
@@ -69,14 +97,26 @@ export default function ListParkingPage() {
               </ScrollView>
             </>
           )} */}
-          <ScrollView style={{ width: "100%" }} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={{ width: "100%" }}
+            showsVerticalScrollIndicator={false}
+          >
+            {parkSpot.map((e) => {
+              return <ParkList 
+                key={e._id} 
+                onPress={() => navigation.navigate('DetailParking', { id: e._id })}
+                name={e.name}
+                address={e.address}
+                img={e.imgUrl[0]}
+              />;
+            })}
+            {/* <ParkList />
             <ParkList />
             <ParkList />
             <ParkList />
             <ParkList />
             <ParkList />
-            <ParkList />
-            <ParkList />
+            <ParkList /> */}
             <View style={{ height: 120 }} />
           </ScrollView>
         </View>

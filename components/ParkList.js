@@ -1,19 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, Image, Pressable } from "react-native";
 
-export default function ParkList() {
+export default function ParkList({ onPress, name, address, img }) {
   const navigation = useNavigation();
   return (
     <Pressable
-      onPress={() => {
-        navigation.navigate("DetailParking");
-      }}
+      onPress={onPress}
     >
       <View
         style={{
           flexDirection: "row",
           alignItems: "start",
-          gap: 10,
+          gap: 12,
           padding: 20,
           backgroundColor: "#F3F4F5",
           borderRadius: 10,
@@ -23,7 +21,7 @@ export default function ParkList() {
         <Image
           style={{ width: 85, height: 85, borderRadius: 10 }}
           source={{
-            uri: "https://fastly.picsum.photos/id/1032/200/300.jpg?hmac=QdMNx6kwGjGtQqK_jCFOZa06MImU1ePTGi3mpwLZmwo",
+            uri: img,
           }}
         />
 
@@ -79,14 +77,14 @@ export default function ParkList() {
                 </Text>
               </View>
             </View>
-            <Text style={{ fontWeight: "bold" }}>Alamat</Text>
-            <Text style={{ color: "#727272" }}>Alamat lengkap</Text>
-            <View style={{ flexDirection: "row", gap: 10 }}>
+            <Text style={{ fontWeight: "bold" }}>{name}</Text>
+            <Text style={{ color: "#727272" }} numberOfLines={2}>{address}</Text>
+            {/* <View style={{ flexDirection: "row", gap: 10 }}>
               <Text style={{ color: "#727272", fontSize: 12 }}>harga/jam</Text>
               <Text style={{ color: "#727272", fontSize: 12 }}>
                 28 available
               </Text>
-            </View>
+            </View> */}
           </View>
         </View>
       </View>

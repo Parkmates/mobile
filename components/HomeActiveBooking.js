@@ -45,19 +45,16 @@ const HomeActiveBooking = ({ type, onPress }) => {
             {/* <Hr pad={8} /> */}
             <View style={styles.addressContainer}>
               <View style={styles.containerAddressInside}>
-                <Text style={styles.address}>Vehicle</Text>
-                <Text style={styles.address}>Booked for</Text>
                 <Text style={styles.address}>Valid Until</Text>
+                <Text style={styles.address}>Checkin Status</Text>
               </View>
               <View style={styles.containerAddressInside}>
                 <Text style={styles.address}>:</Text>
                 <Text style={styles.address}>:</Text>
-                <Text style={styles.address}>:</Text>
               </View>
               <View style={styles.containerAddressInside}>
-                <Text style={styles.address}>Motorcycle</Text>
-                <Text style={styles.address}>31 February 2024</Text>
-                <Text style={styles.address}>09:00 pm</Text>
+                <Text style={styles.address}>09:00pm, 31 February 2024</Text>
+                <Text style={styles.address}>Pending</Text>
               </View>
             </View>
           </View>
@@ -99,6 +96,7 @@ const styles = StyleSheet.create({
   addressContainer: {
     width: "100%",
     flexDirection: "row",
+    marginTop: 8
     // justifyContent: 'space-between'
   },
   buttonCheckin: {

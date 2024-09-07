@@ -11,8 +11,9 @@ import BannerData from "../datas/DataBanner";
 import CarouselBannerItem from "./CarouselBannerItem";
 import Pagination from "./Pagination";
 
-const CarouselBanner = () => {
+const CarouselBanner = ({ data }) => {
   const [paginationIndex, setPaginationIndex] = useState(0);
+  const imgData = data
 
   onViewableItemsChanged = ({ viewableItems, changed }) => {
     setPaginationIndex(viewableItems[0]?.index)
@@ -22,7 +23,7 @@ const CarouselBanner = () => {
     <View>
       <FlatList
         style={styles.item}
-        data={BannerData}
+        data={imgData}
         renderItem={({ item, index }) => (
           <CarouselBannerItem data={item} index={index} />
         )}
@@ -34,7 +35,7 @@ const CarouselBanner = () => {
         }}
         showsHorizontalScrollIndicator={false}
       />
-      <Pagination paginationIndex={paginationIndex} datas={BannerData} />
+      <Pagination paginationIndex={paginationIndex} datas={imgData} />
     </View>
   );
 };

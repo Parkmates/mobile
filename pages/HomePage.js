@@ -7,6 +7,7 @@ import BestSpotCard from "../components/BestSpotCard";
 import AdsComponents from "../components/AdsComponents";
 import * as SecureStore from "expo-secure-store";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import DataBanner from "../datas/DataBanner";
 const HomePage = ({ navigation }) => {
   // console.log(SecureStore.getItem('access_token'))
   return (
@@ -15,7 +16,7 @@ const HomePage = ({ navigation }) => {
         onPressSearch={() => navigation.navigate("Park")}
         onPressProfile={() => navigation.navigate("Profile")}
       />
-      <CarouselBanner />
+      <CarouselBanner data={DataBanner} />
       <View style={styles.containerYourBooking}>
         <Text style={styles.yourBooking}>Your Booking</Text>
         <HomeActiveBooking onPress={() => navigation.navigate("BookingDetail")} />
