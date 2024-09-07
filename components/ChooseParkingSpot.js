@@ -75,5 +75,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 8,
+    flexWrap: 'wrap'
   },
 });

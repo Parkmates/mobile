@@ -1,9 +1,11 @@
 import {
   Button,
   Dimensions,
+  FlatList,
   Image,
   Modal,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -11,41 +13,124 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ListReview from "../components/ListReview";
 import Header from "../components/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import ChooseParkingSpot from "../components/ChooseParkingSpot";
 import Hr from "../components/Hr";
+import Toast from "react-native-toast-message";
+import { api } from "../utils/axios";
+import * as SecureStore from "expo-secure-store";
 
-export default function DetailParkingSpot({ navigation }) {
+export default function DetailParkingSpot({ navigation, route }) {
+  const id = route.params.id;
   const { width } = Dimensions.get("window");
   const [isOpen, setIsOpen] = useState(false);
   const [vehicle, setVehicle] = useState("");
-  const [spotDetail, setSpotDetail] = useState("")
-
+  const [activeSpotDetail, setActiveSpotDetail] = useState("");
+  const [parkSpot, setParkSpot] = useState({});
+  const [spotDetails, setSpotDetails] = useState([]);
+  const [paginationIndex, setPaginationIndex] = useState(0);
+  const [image, setImage] = useState([]);
+  // console.log(id)
   const dummy = [1, 2, 3, 4, 5];
+
+  onViewableItemsChanged = ({ viewableItems, changed }) => {
+    setPaginationIndex(viewableItems[0]?.index);
+  };
+
+  const getData = async () => {
+    try {
+      const { data } = await api({
+        url: `api/parkspot/${id}`,
+        headers: {
+          Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
+        },
+      });
+
+      if (vehicle) {
+        const filter = await data.spotList.filter((e) => e.type === vehicle);
+        setParkSpot(data);
+        setImage(data.imgUrl)
+        setSpotDetails(filter);
+        return;
+      }
+
+      setParkSpot(data);
+      setImage(data.imgUrl)
+      setSpotDetails(data?.spotList);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.response.msg || error.message,
+        topOffset: 50,
+      });
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [vehicle]);
   return (
-    <View style={{ flex: 1, justifyContent: "space-between" , backgroundColor: '#fff'}}>
-      <Header title={"Central Park"} onPress={() => navigation.goBack()}/>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "space-between",
+        backgroundColor: "#fff",
+      }}
+    >
+      <Header title={parkSpot.name} onPress={() => navigation.goBack()} />
       <ScrollView
         style={{ flex: 1, gap: 20 }}
         showsVerticalScrollIndicator={false}
       >
-        <Image
+        {/* <Image
           style={{ width: width, height: 200, paddingTop: 0, marginTop: 0 }}
           resizeMode="cover"
           source={{
-            uri: "https://fastly.picsum.photos/id/1032/200/300.jpg?hmac=QdMNx6kwGjGtQqK_jCFOZa06MImU1ePTGi3mpwLZmwo",
+            uri: parkSpot?.imgUrl[0] ? parkSpot?.imgUrl[0] : "https://fastly.picsum.photos/id/1032/200/300.jpg?hmac=QdMNx6kwGjGtQqK_jCFOZa06MImU1ePTGi3mpwLZmwo",
           }}
+        /> */}
+        <FlatList
+          data={parkSpot.imgUrl}
+          renderItem={({ item, index }) => (
+            <Image
+              style={{ width: width, height: 200, paddingTop: 0, marginTop: 0 }}
+              resizeMode="cover"
+              source={{
+                uri: item,
+              }}
+            />
+          )}
+          horizontal
+          pagingEnabled
+          onViewableItemsChanged={this.onViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 50,
+          }}
+          showsHorizontalScrollIndicator={false}
         />
+        <View style={styles.dotContainer}>
+          {image.map((_, i) => {
+            return (
+              <View
+                key={i}
+                style={[
+                  styles.dot,
+                  { backgroundColor: paginationIndex === i ? "#222" : "#aaa" },
+                ]}
+              ></View>
+            );
+          })}
+        </View>
+
         <View style={{ paddingHorizontal: 24, gap: 10 }}>
           <Text style={{ fontWeight: "bold", fontSize: 20, paddingTop: 20 }}>
-            Parking spot name
+            {parkSpot.name}
           </Text>
-          <Text style={{ fontSize: 12 }}>
-            Jl. Sultan Iskandar Muda No.7, RT.5/RW.9, Kby. Lama Sel., Kec. Kby.
-            Lama, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12240.
-          </Text>
+          <Text style={{ fontSize: 12 }}>{parkSpot.address}</Text>
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
             onPress={() => setIsOpen(true)}
@@ -95,18 +180,19 @@ export default function DetailParkingSpot({ navigation }) {
               style={{
                 width: "50%",
                 padding: 10,
-                backgroundColor: vehicle === "motor" ? "#007BFF" : "#D9D9D9",
+                backgroundColor:
+                  vehicle === "motorcycle" ? "#007BFF" : "#D9D9D9",
                 borderRadius: 10,
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              onPress={() => setVehicle("motor")}
+              onPress={() => setVehicle("motorcycle")}
             >
               <Fontisto
                 name="motorcycle"
                 size={30}
-                color={vehicle === "motor" ? "#fff" : "black"}
+                color={vehicle === "motorcycle" ? "#fff" : "black"}
               />
             </TouchableOpacity>
           </View>
@@ -119,24 +205,31 @@ export default function DetailParkingSpot({ navigation }) {
             >
               Chose your parking spot
             </Text>
-            {dummy.map((e) => {
-              return <ChooseParkingSpot 
-                key={e}  
-                floor={1}
-                area={"A1"}
-                fee={"10.000"}
-                spot={12}
-                type={spotDetail === e ? 'active' : ''}
-                onPress={() => setSpotDetail(e)}
-                vehicle={"motor"}
-              />;
+            {spotDetails.map((e) => {
+              return (
+                <ChooseParkingSpot
+                  key={e._id}
+                  floor={e.floor}
+                  area={e.area}
+                  fee={e.fee}
+                  spot={e.quantity}
+                  type={activeSpotDetail === e._id ? "active" : ""}
+                  onPress={() => setActiveSpotDetail(e._id)}
+                  vehicle={e.type}
+                />
+              );
             })}
+            {
+              spotDetails.length < 1 && (
+                <Text style={{ textAlign: 'center', fontWeight: '700', color: '#6C757D' }}>Sorry, it's empty!</Text>
+              )
+            }
           </View>
           <View style={{ height: 80 }} />
         </View>
       </ScrollView>
       {/* Button Book Now */}
-      {spotDetail && (
+      {activeSpotDetail && (
         <View
           style={{
             position: "absolute",
@@ -153,10 +246,10 @@ export default function DetailParkingSpot({ navigation }) {
               height: 50,
               alignItems: "center",
               justifyContent: "center",
+              elevation: 10
             }}
             onPress={() => {
-              // navigation.goBack();
-              navigation.navigate("ConfirmationBooking");
+              navigation.navigate("ConfirmationBooking", { id: id, spotId: activeSpotDetail });
             }}
           >
             <Text style={{ color: "white" }}>
@@ -179,7 +272,7 @@ export default function DetailParkingSpot({ navigation }) {
           enablePanDownToClose={true}
           onClose={() => setIsOpen(false)}
           // backgroundStyle={{ backgroundColor: "rgba(255, 255, 255, 0.75)" }}
-          style={{ elevation: 10 }}
+          style={{ backgroundColor: 'red', flex: 1, topOffset: 0 }}
         >
           <BottomSheetScrollView
             showsVerticalScrollIndicator={false}
@@ -195,26 +288,7 @@ export default function DetailParkingSpot({ navigation }) {
             >
               Review
             </Text>
-            <Hr/>
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
+            <Hr />
             <ListReview />
             <ListReview />
             <ListReview />
@@ -241,3 +315,19 @@ export default function DetailParkingSpot({ navigation }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  dotContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 16,
+  },
+  dot: {
+      backgroundColor: '#aaa',
+      height: 6,
+      width: 6,
+      marginHorizontal: 2,
+      borderRadius: 6,
+  }
+})
