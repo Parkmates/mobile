@@ -1,4 +1,12 @@
-import { Dimensions, Image, StyleSheet, Text, View, ScrollView, Touchable } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Touchable,
+} from "react-native";
 import React from "react";
 import Header from "../components/Header";
 import img1 from "../assets/12.png";
@@ -9,7 +17,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 const BookingDetail = ({ navigation }) => {
   const { width } = Dimensions.get("window");
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#fff" }} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: "#fff" }}
+      showsVerticalScrollIndicator={false}
+    >
       <Header title={"Booking Detail"} onPress={() => navigation.goBack()} />
       <View style={styles.container}>
         <View>
@@ -82,8 +93,15 @@ const BookingDetail = ({ navigation }) => {
             <Text>09.00pm, 31 Feb 2024</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.buttonCheckin}>
-            <Text style={styles.buttonText}>Checkin Now</Text>
+        <TouchableOpacity
+          style={styles.buttonCheckin}
+          onPress={() =>
+            navigation.navigate("ShowQrCode", {
+              trxId: "66d70e189827eceb54d1a655",
+            })
+          }
+        >
+          <Text style={styles.buttonText}>Checkin Now</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -115,13 +133,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   buttonCheckin: {
-    backgroundColor: '#007BFF',
+    backgroundColor: "#007BFF",
     padding: 12,
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff'
-  }
+    color: "#fff",
+  },
 });

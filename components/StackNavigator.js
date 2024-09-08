@@ -12,6 +12,7 @@ import PaymentPage from "../pages/PaymentPage";
 import ThankYouAndReviewPage from "../pages/ThankYouAndReviewPage";
 import SplashScreen from "../pages/SplashScreen";
 import BookingDetail from "../pages/BookingDetail";
+import QrCodePage from "../pages/QrCodePage";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,12 +32,18 @@ const StackNavigator = () => {
       <Stack.Screen
         name="Login"
         component={LoginPage}
-        options={{ 
-        headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="TabNavigator"
         component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="QrCode"
+        component={QrCodePage}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -63,6 +70,11 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
         name="BookingDetail"
         component={BookingDetail}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ShowQrCode"
+        component={QrCodePage}
       />
       {/* <Stack.Screen name='Profile' component={ProfilePage} options={{ headerShown: false }}/> */}
     </Stack.Navigator>
