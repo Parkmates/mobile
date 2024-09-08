@@ -71,6 +71,11 @@ const StackNavigator = () => {
         name="BookingDetail"
         component={BookingDetail}
       />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="ShowQrCode"
+        component={QrCodePage}
+      />
       {/* <Stack.Screen name='Profile' component={ProfilePage} options={{ headerShown: false }}/> */}
     </Stack.Navigator>
   );

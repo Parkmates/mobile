@@ -6,12 +6,6 @@ import { useRoute } from "@react-navigation/native";
 export default function QrCodePage({ navigation }) {
   const route = useRoute();
   const { trxId } = route.params;
-  const data = [
-    {
-      trxId,
-      userId: 123,
-    },
-  ];
 
   return (
     <View
@@ -46,7 +40,7 @@ export default function QrCodePage({ navigation }) {
             shadowRadius: 3,
           }}
         >
-          <QRCode size={230} value={data} />
+          <QRCode size={230} value={trxId} />
           <Text style={{ fontWeight: "bold" }}>ParkMate</Text>
         </View>
         <Text style={{ fontWeight: "bold", textAlign: "center" }}>
