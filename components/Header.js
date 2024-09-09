@@ -10,7 +10,7 @@ const Header = ({ title, onPress }) => {
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       <View>
-        <ChevronLeft />
+        <ChevronLeft color={"#fff"} />
       </View>
     </View>
   );

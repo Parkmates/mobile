@@ -3,8 +3,10 @@ import React from "react";
 import Hr from "./Hr";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Fontisto from "@expo/vector-icons/Fontisto";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const HomeActiveBooking = ({ type, onPress }) => {
+  const stat = "booking pending";
   return (
     // if empty
     // <TouchableOpacity style={styles.containerEmpty}>
@@ -26,20 +28,18 @@ const HomeActiveBooking = ({ type, onPress }) => {
         />
         <View style={styles.rightContainer}>
           <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Text style={styles.name}>Central Park Mall GF</Text>
               {type === "car" ? (
-                <Ionicons
-                  name="car"
-                  size={26}
-                  color={"black"}
-                />
+                <Ionicons name="car" size={26} color={"black"} />
               ) : (
-                <Fontisto
-                  name="motorcycle"
-                  size={23}
-                  color={"black"}
-                />
+                <Fontisto name="motorcycle" size={23} color={"black"} />
               )}
             </View>
             {/* <Hr pad={8} /> */}
@@ -60,10 +60,26 @@ const HomeActiveBooking = ({ type, onPress }) => {
           </View>
         </View>
       </View>
-      <Hr />
-      <TouchableOpacity style={styles.buttonCheckin}>
+      <Hr pad={12} />
+      {/* <TouchableOpacity style={styles.buttonCheckin}>
         <Text style={styles.bookNowText}>Checkin Now</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <View style={[styles.miniContainer, { marginBottom: 0 }]}>
+        <View style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            size={24}
+            color="#007BFF"
+          />
+          <Text style={{ color: "#6C757D" }}>Status</Text>
+        </View>
+        <Text style={{ color: '#6C757D' }}>
+          {stat === "booking pending" && "Waiting Booking Payment"}
+          {stat === "booking successfull" && "Waiting you to check in"}
+          {stat === "parking" && "Parking"}
+          {stat === "checkout pending" && "Waiting Payment"}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -90,13 +106,13 @@ const styles = StyleSheet.create({
   },
   address: {
     width: "100%",
-    color: "#737373",
+    color: "#6C757D",
     fontSize: 12,
   },
   addressContainer: {
     width: "100%",
     flexDirection: "row",
-    marginTop: 8
+    marginTop: 8,
     // justifyContent: 'space-between'
   },
   buttonCheckin: {
@@ -131,5 +147,11 @@ const styles = StyleSheet.create({
   bookNowText: {
     color: "#fff",
     fontSize: 12,
+  },
+  miniContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
   },
 });

@@ -272,7 +272,7 @@ export default function DetailParkingSpot({ navigation, route }) {
           enablePanDownToClose={true}
           onClose={() => setIsOpen(false)}
           // backgroundStyle={{ backgroundColor: "rgba(255, 255, 255, 0.75)" }}
-          style={{ backgroundColor: 'red', flex: 1, topOffset: 0 }}
+          // style={{ backgroundColor: 'red', flex: 1, topOffset: 0 }}
         >
           <BottomSheetScrollView
             showsVerticalScrollIndicator={false}
