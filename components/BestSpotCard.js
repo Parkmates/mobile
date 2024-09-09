@@ -3,12 +3,12 @@ import React from "react";
 import { Star } from "react-native-feather";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-const BestSpotCard = () => {
+const BestSpotCard = ({ name, img, address, onPress }) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image
         source={{
-          uri: "https://plus.unsplash.com/premium_photo-1724766409767-120f58295b83?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          uri: img,
         }}
         height={120}
         width={"100%"}
@@ -16,9 +16,9 @@ const BestSpotCard = () => {
         style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
       />
       <View style={styles.detailContainer}>
-        <Text style={styles.title}>Central Park Mall GF</Text>
-        <Text style={styles.address}>
-          Parking Address Blablabla Blablabla Blablabla
+        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.address} numberOfLines={3}>
+          {address}
         </Text>
         <View style={styles.ratingContainer}>
           <Ionicons name="star" size={14} color="black" />

@@ -1,14 +1,67 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HomeActiveBooking from "../components/HomeActiveBooking";
 import ParkingHistory from "../components/ParkingHistory";
+import { api } from "../utils/axios";
+import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
 
 const BookPage = ({ navigation }) => {
+  const [booking, setBooking] = useState([]);
+  const [loading, setLoading] = useState(false)
+
+  const getBooking = async () => {
+    setLoading(true)
+    try {
+      const { data } = await api({
+        url: "/api/trx",
+        headers: {
+          Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
+        },
+      });
+
+      const active = await data.filter(
+        (e) => e.status !== "checkoutSuccessfull" || e.status !== "failed"
+      );
+
+      setBooking(active);
+      setLoading(false)
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Errror",
+        text2: error.response.data.msg,
+      });
+      console.log(error.response.data);
+      console.log(error)
+      setLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    getBooking();
+  }, [])
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.containerActive}>
         <Text style={styles.yourBooking}>Your Booking</Text>
-        <HomeActiveBooking onPress={() => navigation.navigate("BookingDetail")} />
+        {booking.length > 0 && (
+          <HomeActiveBooking
+            img={booking[0]?.parkingSpot?.imgUrl[0]}
+            name={booking[0]?.parkingSpot?.name}
+            status={booking[0]?.status}
+            until={booking[0]?.createdAt}
+            isLoading={loading}
+            onPress={() => navigation.navigate("BookingDetail", { transactionId: booking[0]._id })}
+          />
+        )}
+        {booking.length === 0 && (
+          <HomeActiveBooking
+            isEmpyt={true}
+            isLoading={loading}
+            onPress={() => navigation.navigate("Park")}
+          />
+        )}
       </View>
       <Text style={[styles.yourBooking, { marginTop: 24, paddingHorizontal: 24 }]}>
         Booking History

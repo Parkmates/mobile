@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HomeSearchBar from "../components/SearchBar";
 import CarouselBanner from "../components/CarouselBanner";
 import HomeActiveBooking from "../components/HomeActiveBooking";
@@ -8,8 +8,61 @@ import AdsComponents from "../components/AdsComponents";
 import * as SecureStore from "expo-secure-store";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import DataBanner from "../datas/DataBanner";
+import Toast from "react-native-toast-message";
+import { api } from "../utils/axios";
 const HomePage = ({ navigation }) => {
   // console.log(SecureStore.getItem('access_token'))
+  const [bestSpot, setBestSpot] = useState([]);
+  const [booking, setBooking] = useState([]);
+  const [isGettingData, setIsGettingData] = useState(true)
+  const getBestSpot = async () => {
+    try {
+      const { data } = await api({
+        url: "/api/parkspot/best",
+        headers: {
+          Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
+        },
+      });
+
+      setBestSpot(data);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Errror",
+        text2: error.response.data.msg,
+      });
+      console.log(error.response.data);
+    }
+  };
+
+  const getBooking = async () => {
+    try {
+      const { data } = await api({
+        url: "/api/trx",
+        headers: {
+          Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
+        },
+      });
+
+      const active = await data.filter(
+        (e) => e.status !== "checkoutSuccessfull" || e.status !== "failed"
+      );
+      setBooking(active);
+      setIsGettingData(false)
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Errror",
+        text2: error.response.data.msg,
+      });
+      console.log(error.response.data);
+    }
+  };
+
+  useEffect(() => {
+    getBestSpot();
+    getBooking();
+  }, []);
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <HomeSearchBar
@@ -19,7 +72,23 @@ const HomePage = ({ navigation }) => {
       <CarouselBanner data={DataBanner} />
       <View style={styles.containerYourBooking}>
         <Text style={styles.yourBooking}>Your Booking</Text>
-        <HomeActiveBooking onPress={() => navigation.navigate("BookingDetail")} />
+        {booking.length > 0 && (
+          <HomeActiveBooking
+            img={booking[0]?.parkingSpot?.imgUrl[0]}
+            name={booking[0]?.parkingSpot?.name}
+            status={booking[0]?.status}
+            until={booking[0]?.createdAt}
+            isLoading={isGettingData}
+            onPress={() => navigation.navigate("BookingDetail", { transactionId: booking[0]._id })}
+          />
+        )}
+        {booking.length === 0 && (
+          <HomeActiveBooking
+            isEmpyt={true}
+            isLoading={isGettingData}
+            onPress={() => navigation.navigate("Park")}
+          />
+        )}
       </View>
       <View style={styles.containerYourBooking}>
         <View style={styles.titleWrapper}>
@@ -29,9 +98,19 @@ const HomePage = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.bestContainer}>
-          <BestSpotCard />
-          <BestSpotCard />
-          <BestSpotCard />
+          {bestSpot.map((e) => {
+            return (
+              <BestSpotCard
+                key={e._id}
+                name={e.name}
+                img={e.imgUrl[0]}
+                address={e.address}
+                onPress={() =>
+                  navigation.navigate("DetailParking", { id: e._id })
+                }
+              />
+            );
+          })}
         </View>
       </View>
       <View style={styles.containerYourBooking}>
