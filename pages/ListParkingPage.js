@@ -33,7 +33,7 @@ export default function ListParkingPage({ navigation }) {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: error.response.msg,
+        text2: error.response?.data.msg,
         topOffset: 50,
       });
     }

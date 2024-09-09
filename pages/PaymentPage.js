@@ -3,25 +3,25 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import WebView from "react-native-webview";
 
-const PaymentPage = ({ navigation }) => {
+const PaymentPage = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
 
-  const url = "https://youtube.com"
+  const url = route.params.url || "https://youtube.com"
 
   const handleNavigationChange = (navState) => {
     const { url } = navState;
 
     // Cek apakah URL mengindikasikan transaksi berhasil
-    if (url.includes("Jess")) {
+    if (url.includes("done")) {
       // Tutup WebView
     //   setIsOpen(false);
       // Arahkan ke halaman sukses atau lainnya
-      navigation.navigate("ThankYouAndReview");
+      navigation.replace('TabNavigator', { screen: 'Book' });
     }
   };
   return (
     <View style={styles.container}>
-      <Header title={"Payment"} onPress={() => navigation.goBack()} />
+      <Header title={"Payment"} onPress={() => navigation.replace('TabNavigator', { screen: 'Book' })} />
       <WebView
         source={{
           uri: url

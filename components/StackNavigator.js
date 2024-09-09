@@ -52,7 +52,7 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        options={{ presentation: "modal", headerShown: false }}
+        options={{ headerShown: false }}
         name="DetailParking"
         component={DetailParkingSpot}
       />

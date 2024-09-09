@@ -16,6 +16,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 const BookingDetail = ({ navigation }) => {
   const { width } = Dimensions.get("window");
+  const stat = "booking successfull";
+  const trxId = "66d70e189827eceb54d1a655"
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "#fff" }}
@@ -39,9 +41,14 @@ const BookingDetail = ({ navigation }) => {
                 size={24}
                 color="#007BFF"
               />
-              <Text style={{ color: "#6C757D" }}>Check in status</Text>
+              <Text style={{ color: "#6C757D" }}>Status</Text>
             </View>
-            <Text>Pending</Text>
+            <Text>
+              {stat === "booking pending" && "Waiting Booking Payment"}
+              {stat === "booking successfull" && "Waiting you to check in"}
+              {stat === "parking" && "Parking"}
+              {stat === "checkout pending" && "Waiting Payment"}
+            </Text>
           </View>
         </View>
         <View style={styles.statusContainer}>
@@ -93,16 +100,42 @@ const BookingDetail = ({ navigation }) => {
             <Text>09.00pm, 31 Feb 2024</Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.buttonCheckin}
-          onPress={() =>
-            navigation.navigate("ShowQrCode", {
-              trxId: "66d70e189827eceb54d1a655",
-            })
-          }
-        >
-          <Text style={styles.buttonText}>Checkin Now</Text>
-        </TouchableOpacity>
+        {stat === "booking successfull" && (
+          <TouchableOpacity
+            style={styles.buttonCheckin}
+            onPress={() =>
+              navigation.navigate("ShowQrCode", {
+                trxId: trxId,
+              })
+            }
+          >
+            <Text style={styles.buttonText}>Check-in Now</Text>
+          </TouchableOpacity>
+        )}
+        {stat === "booking pending" && (
+          <TouchableOpacity
+            style={styles.buttonCheckin}
+            onPress={() =>
+              navigation.navigate("PaymentPage", {
+                trxId: "66d70e189827eceb54d1a655",
+              })
+            }
+          >
+            <Text style={styles.buttonText}>Pay Now</Text>
+          </TouchableOpacity>
+        )}
+        {stat === "checkout pending" && (
+          <TouchableOpacity
+            style={styles.buttonCheckin}
+            onPress={() =>
+              navigation.navigate("PaymentPage", {
+                trxId: "66d70e189827eceb54d1a655",
+              })
+            }
+          >
+            <Text style={styles.buttonText}>Pay Now</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );

@@ -14,12 +14,56 @@ import WebView from "react-native-webview";
 import Toast from "react-native-toast-message";
 import { api } from "../utils/axios";
 import * as SecureStore from "expo-secure-store";
+import Loading from "../components/Loading";
 
 const ConfirmationBookingPage = ({ navigation, route }) => {
   const { id, spotId } = route.params;
   const [parkSpot, setParkSpot] = useState({});
   const [spotDetail, setSpotDetail] = useState({});
   const bookRate = 15000;
+  const [loading, setLoading] = useState(false);
+
+  const makeTransaction = async () => {
+    setLoading(true)
+    try {
+      const transaction = await api({
+        method: 'POST',
+        url: '/api/trx',
+        data: {
+          spotDetailId: spotId
+        }
+      })
+      const payment = await api({
+        method: "POST",
+        url: "/api/payment",
+        data: {
+          type: "booking",
+          trxId: transaction.data.msg,
+          amount: spotDetail.fee,
+        },
+      });
+
+      // console.log(parkSpot)
+
+      navigation.replace("PaymentPage", {
+        url: payment.data.paymentUrl.redirect_url,
+      });
+      setLoading(false)
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: error.response?.data.msg,
+        });
+        console.log(spotId);
+
+        console.log(error.response.data.msg);
+      }
+      setLoading(false)
+    }
+  };
 
   const getData = async () => {
     try {
@@ -36,7 +80,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: error.response.msg,
+          text2: error.response.data.msg,
           topOffset: 50,
         });
       } else {
@@ -86,7 +130,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
             style: "currency",
             currency: "IDR",
             maximumFractionDigits: 0,
-          }).format(bookRate)}
+          }).format(spotDetail.type === 'car' ? 10000 : 5000)}
         </Text>
         <Hr pad={16} />
         <View style={styles.containerDescription}>
@@ -150,10 +194,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => navigation.navigate("PaymentPage")}
-        >
+        <TouchableOpacity style={styles.btn} onPress={makeTransaction}>
           <Text style={styles.btnText}>Continue to Payment</Text>
         </TouchableOpacity>
 
@@ -182,7 +223,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
                     style: "currency",
                     currency: "IDR",
                     maximumFractionDigits: 0,
-                  }).format(bookRate)}
+                  }).format(spotDetail.type === 'car' ? 10000 : 5000)}
                 </Text>
                 <Text style={styles.leftDescription}>
                   {new Intl.NumberFormat("id-ID", {
@@ -203,6 +244,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
           </View>
         </View>
       </View>
+      {loading && <Loading />}
     </View>
   );
 };
@@ -270,5 +312,5 @@ const styles = StyleSheet.create({
   },
   BottomSheet: {
     backgroundColor: "rgba(0, 0, 0, 0.35)",
-  },
+  }
 });
