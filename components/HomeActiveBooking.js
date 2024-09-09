@@ -1,12 +1,79 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import Hr from "./Hr";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Loading from "./Loading";
 
-const HomeActiveBooking = ({ type, onPress }) => {
-  const stat = "booking pending";
+const HomeActiveBooking = ({
+  type,
+  onPress,
+  isEmpyt,
+  name,
+  until,
+  status,
+  img,
+  isLoading,
+}) => {
+  const stat = status || "bookingPending";
+
+  const dateFormat = (until) => {
+    let date = new Date(until).toLocaleDateString("id-ID", {
+      timeZone: "Asia/Bangkok",
+      dayPeriod: "narrow",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+    let dateNumber = new Date(until).getDate();
+    let hour = new Date(until).getHours() + 1;
+    let minute = new Date(until).getMinutes();
+
+    if (hour > 23 && minute > 0) {
+      let newDate = new Date(until).setDate(new Date(until).getDate() + 2);
+      date = new Date(newDate).toLocaleDateString("id-ID", {
+        timeZone: "Asia/Bangkok",
+        dayPeriod: "narrow",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+
+      hour = hour - 24;
+    }
+
+    let formatedHours = hour < 10 ? "0" + hour : hour;
+    let formatedMinutes = minute < 10 ? "0" + minute : minute;
+
+    return `${formatedHours}:${formatedMinutes}, ${date}`;
+  };
+
+  if (isLoading === true) {
+    return (
+      // if empty
+      <TouchableOpacity style={styles.containerEmpty}>
+        <ActivityIndicator size={"large"} color={"#007BFF"} />
+      </TouchableOpacity>
+    );
+  } else if (isLoading === false && isEmpyt === true) {
+    return (
+      // if empty
+      <TouchableOpacity style={styles.containerEmpty}>
+        <Text>You havent booking yet.</Text>
+        <TouchableOpacity style={styles.buttonBookNow} onPress={onPress}>
+          <Text style={styles.bookNowText}>Book Now</Text>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    );
+  }
   return (
     // if empty
     // <TouchableOpacity style={styles.containerEmpty}>
@@ -19,7 +86,7 @@ const HomeActiveBooking = ({ type, onPress }) => {
       <View style={styles.innerContainerTop}>
         <Image
           source={{
-            uri: "https://plus.unsplash.com/premium_photo-1661963457416-185db28e96c6?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            uri: img,
           }}
           height={80}
           width={80}
@@ -35,7 +102,7 @@ const HomeActiveBooking = ({ type, onPress }) => {
                 alignItems: "center",
               }}
             >
-              <Text style={styles.name}>Central Park Mall GF</Text>
+              <Text style={styles.name}>{name}</Text>
               {type === "car" ? (
                 <Ionicons name="car" size={26} color={"black"} />
               ) : (
@@ -46,16 +113,17 @@ const HomeActiveBooking = ({ type, onPress }) => {
             <View style={styles.addressContainer}>
               <View style={styles.containerAddressInside}>
                 <Text style={styles.address}>Valid Until</Text>
-                <Text style={styles.address}>Checkin Status</Text>
-              </View>
-              <View style={styles.containerAddressInside}>
                 <Text style={styles.address}>:</Text>
+                <Text style={[styles.address, { flexShrink: 1 }]}>
+                  {dateFormat(until)}
+                </Text>
+              </View>
+              {/* <View style={styles.containerAddressInside}>
                 <Text style={styles.address}>:</Text>
               </View>
-              <View style={styles.containerAddressInside}>
-                <Text style={styles.address}>09:00pm, 31 February 2024</Text>
-                <Text style={styles.address}>Pending</Text>
-              </View>
+              <View style={[styles.containerAddressInside, { width: '100%' }]}>
+                <Text style={styles.address}>{until}</Text>
+              </View> */}
             </View>
           </View>
         </View>
@@ -73,11 +141,11 @@ const HomeActiveBooking = ({ type, onPress }) => {
           />
           <Text style={{ color: "#6C757D" }}>Status</Text>
         </View>
-        <Text style={{ color: '#6C757D' }}>
-          {stat === "booking pending" && "Waiting Booking Payment"}
-          {stat === "booking successfull" && "Waiting you to check in"}
+        <Text style={{ color: "#6C757D" }}>
+          {stat === "bookingPending" && "Waiting Booking Payment"}
+          {stat === "bookingSuccessfull" && "Waiting you to check in"}
           {stat === "parking" && "Parking"}
-          {stat === "checkout pending" && "Waiting Payment"}
+          {stat === "checkoutPending" && "Waiting Payment"}
         </Text>
       </View>
     </TouchableOpacity>
@@ -103,9 +171,9 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: "700",
+    flex: 1,
   },
   address: {
-    width: "100%",
     color: "#6C757D",
     fontSize: 12,
   },
@@ -125,7 +193,10 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
   containerAddressInside: {
-    marginRight: 10,
+    // marginRight: 10,
+    flexDirection: "row",
+    flex: 1,
+    gap: 8,
   },
   containerEmpty: {
     backgroundColor: "#e2e2e2",
@@ -138,7 +209,7 @@ const styles = StyleSheet.create({
   buttonBookNow: {
     width: "50%",
     backgroundColor: "#007bff",
-    borderRadius: 20,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     height: 36,

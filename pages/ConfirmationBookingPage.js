@@ -39,7 +39,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
         data: {
           type: "booking",
           trxId: transaction.data.msg,
-          amount: spotDetail.fee,
+          amount: spotDetail.type === 'car' ? 10000 : 5000,
         },
       });
 
@@ -66,6 +66,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
   };
 
   const getData = async () => {
+    setLoading(true)
     try {
       const { data } = await api({
         url: `api/parkspot/${id}`,
@@ -75,6 +76,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
       });
 
       setParkSpot(data);
+      setLoading(false)
     } catch (error) {
       if (error.response) {
         Toast.show({
@@ -86,10 +88,12 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
       } else {
         console.log(error);
       }
+      setLoading(false)
     }
   };
 
   const getDataDetail = async () => {
+    setLoading(true)
     try {
       const { data } = await api({
         url: `api/parkspot/${id}/${spotId}`,
@@ -99,6 +103,8 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
       });
 
       setSpotDetail(data);
+      setLoading(false)
+
     } catch (error) {
       if (error.response) {
         Toast.show({
@@ -110,6 +116,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
       } else {
         console.log(error);
       }
+      setLoading(false)
     }
   };
 
