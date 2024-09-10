@@ -18,12 +18,14 @@ import { api } from "../utils/axios";
 import * as SecureStore from "expo-secure-store";
 import Loading from "../components/Loading";
 import Foundation from "@expo/vector-icons/Foundation";
+import BottomSheet from "@gorhom/bottom-sheet";
+import QRCode from "react-native-qrcode-svg";
 
 const BookingDetail = ({ navigation, route }) => {
   const { width } = Dimensions.get("window");
   const [loading, setLoading] = useState(false);
   const [transaction, setTransaction] = useState([]);
-  const [needPay, setNeedPay] = useState(true);
+  const [code, setCode] = useState(false);
   // const stat = transaction[0]?.status;
   const checkinTime = (time) => {
     let hour = new Date(time).getHours();
@@ -94,7 +96,13 @@ const BookingDetail = ({ navigation, route }) => {
       });
 
       setTransaction(data);
+
       setLoading(false);
+      if (data.status === "checkoutSuccessfull") {
+        navigation.replace("ThankYouAndReview", {
+          spotId: data.parkingSpot._id,
+        });
+      }
     } catch (error) {
       if (error.response) {
         Toast.show({
@@ -118,8 +126,8 @@ const BookingDetail = ({ navigation, route }) => {
 
       let finalAmount = toPay - paymentDB;
 
-      if(finalAmount === 0) {
-        finalAmount = 2500
+      if (finalAmount === 0) {
+        finalAmount = 2500;
       }
 
       const payment = await api({
@@ -151,10 +159,25 @@ const BookingDetail = ({ navigation, route }) => {
     }
   };
 
+  const checkData = async () => {
+    if (transaction[0]?.status === "checkoutSuccessfull") {
+      navigation.replace("ThankYouAndReview", {
+        spotId: transaction[0]?.parkingSpot._id,
+      });
+    }
+  };
+
   useEffect(() => {
     getData();
-    // console.log(transaction)
-  }, []);
+  }, [code]);
+
+  useEffect(() => {
+    transaction[0]?.status === "checkoutSuccessfull"
+      ? navigation.replace("ThankYouAndReview", {
+          spotId: transaction[0]?.parkingSpot._id,
+        })
+      : "";
+  }, [code, transaction]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -292,30 +315,28 @@ const BookingDetail = ({ navigation, route }) => {
               <Text>{transaction[0]?.spotDetail?.area}</Text>
             </View>
             <View style={[styles.miniContainer, { marginBottom: 0 }]}>
-                <View
-                  style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}
-                >
-                  {/* <MaterialCommunityIcons
+              <View style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}>
+                {/* <MaterialCommunityIcons
                   name="clock-time-eight-outline"
                   size={24}
                   color="#007BFF"
                 /> */}
-                  <Foundation
-                    name="dollar"
-                    size={28}
-                    color="#007BFF"
-                    style={{ paddingHorizontal: 6 }}
-                  />
-                  <Text style={{ color: "#6C757D" }}>Book Fee</Text>
-                </View>
-                <Text>
-                  {new Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                    maximumFractionDigits: 0,
-                  }).format(transaction[0]?.bookingFee)}
-                </Text>
+                <Foundation
+                  name="dollar"
+                  size={28}
+                  color="#007BFF"
+                  style={{ paddingHorizontal: 6 }}
+                />
+                <Text style={{ color: "#6C757D" }}>Book Fee</Text>
               </View>
+              <Text>
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  maximumFractionDigits: 0,
+                }).format(transaction[0]?.bookingFee)}
+              </Text>
+            </View>
             <View style={[styles.miniContainer, { marginBottom: 0 }]}>
               <View style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}>
                 <MaterialCommunityIcons
@@ -393,9 +414,10 @@ const BookingDetail = ({ navigation, route }) => {
             <TouchableOpacity
               style={styles.buttonCheckin}
               onPress={() =>
-                navigation.navigate("ShowQrCode", {
-                  trxId: route.params.transactionId,
-                })
+                // navigation.navigate("ShowQrCode", {
+                //   trxId: route.params.transactionId,
+                // })
+                setCode(true)
               }
             >
               <Text style={styles.buttonText}>Checkin Now</Text>
@@ -405,9 +427,12 @@ const BookingDetail = ({ navigation, route }) => {
             <TouchableOpacity
               style={styles.buttonCheckin}
               onPress={() =>
-                navigation.navigate("ShowQrCode", {
-                  trxId: route.params.transactionId,
-                })
+                // navigation.navigate("ShowQrCode", {
+                //   trxId: route.params.transactionId,
+                //   type: "checkout",
+                //   spotId: transaction[0]?.parkingSpot._id,
+                // })
+                setCode(true)
               }
             >
               <Text style={styles.buttonText}>Checkout Now</Text>
@@ -435,6 +460,75 @@ const BookingDetail = ({ navigation, route }) => {
           )}
         </View>
       </ScrollView>
+      {code && (
+        <BottomSheet
+          snapPoints={["80%"]}
+          // onClose={() => setIsOpen(false)}
+          // backgroundStyle={{ backgroundColor: "rgba(255, 255, 255, 0.75)" }}
+          style={{ color: "red", flex: 1, topOffset: 0 }}
+          containerStyle={{ backgroundColor: "rgba(0, 0, 0, 0.50)" }}
+        >
+          <View
+            style={{
+              padding: 24,
+              flex: 1,
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 24 }}>
+              {transaction[0].status === "bookingSuccessfull" &&
+                "Checkin QR-Code"}
+              {transaction[0].status === "checkoutPending" &&
+                "Checkout QR-Code"}
+            </Text>
+            <View
+              style={{
+                gap: 20,
+                alignItems: "center",
+                padding: 20,
+                backgroundColor: "#fff",
+                borderRadius: 10,
+                shadowColor: "#171717",
+                shadowOffset: { width: -2, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 3,
+              }}
+            >
+              <Text style={{ fontWeight: "bold" }}>
+                {transaction[0].status === "bookingSuccessfull" &&
+                  "Scan the QR code to enter the parking area."}
+                {transaction[0].status === "checkoutPending" &&
+                  "Scan the QR code to checkout from parking area."}
+              </Text>
+              <QRCode size={230} value={route.params.transactionId} />
+              <Text style={{ fontWeight: "bold" }}>ParkMate</Text>
+            </View>
+            <View style={{ width: "100%" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  transaction[0]?.status === "checkoutSuccessfull"
+                    ? navigation.replace("ThankYouAndReview", {
+                        spotId: transaction[0]?.parkingSpot._id,
+                      })
+                    : "";
+                  setCode(false);
+                }}
+                style={{
+                  width: "100%",
+                  backgroundColor: "#007BFF",
+                  borderRadius: 10,
+                  height: 50,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ color: "white" }}>Done</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </BottomSheet>
+      )}
       {loading && <Loading />}
     </View>
   );
@@ -458,11 +552,11 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginBottom: 12,
-    borderColor: '#e2e2e2',
+    borderColor: "#e2e2e2",
     borderWidth: 1,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 5, height: 3 }
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 3 },
   },
   miniContainer: {
     flexDirection: "row",
