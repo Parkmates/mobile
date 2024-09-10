@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { globalStyles } from "../styles/global";
 import ParkingHistory from "../components/ParkingHistory";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -15,8 +15,30 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
+import { api } from "../utils/axios";
 
 const ProfilePage = ({ navigation }) => {
+  const [user, setUser] = useState([]);
+  const getData = async() => {
+    try {
+      const { data } = await api({
+        url: '/api/users',
+        headers: {
+          Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
+        }
+      })
+
+      setUser(data)
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.response.data.msg
+      })
+    }
+  }
+
   return (
     <View style={[globalStyles.container, { padding: 24 }]}>
       <View
