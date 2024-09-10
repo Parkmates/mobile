@@ -1,7 +1,15 @@
 import { Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import Fontisto from "@expo/vector-icons/Fontisto";
 
-export default function ParkingHistory() {
+export default function ParkingHistory({
+  name,
+  time,
+  type,
+  book,
+  pay,
+  status,
+}) {
   return (
     <View style={{ paddingHorizontal: 20 }}>
       <View
@@ -24,18 +32,38 @@ export default function ParkingHistory() {
                 backgroundColor: "#F3F4F5",
                 padding: 10,
                 borderRadius: 10,
+                width: 50,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <Ionicons name="car" size={30} />
+              {type === "car" ? (
+                <Ionicons name="car" size={30} />
+              ) : (
+                <Fontisto name="motorcycle" size={30} />
+              )}
             </View>
             <View>
-              <Text>Nama Parkir</Text>
+              <Text>{name}</Text>
               <Text style={{ fontSize: 12, color: "#6c757d" }}>
-                Monday, 4:00 am
+                {new Date(time).toLocaleDateString("id-ID", {
+                  timeZone: "Asia/Bangkok",
+                  dayPeriod: "narrow",
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}
               </Text>
             </View>
           </View>
-          <Text>$ -25.000</Text>
+          <Text>
+            {new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: "IDR",
+              maximumFractionDigits: 0,
+            }).format(book + pay)}
+          </Text>
         </View>
       </View>
     </View>

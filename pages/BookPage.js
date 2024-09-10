@@ -8,7 +8,8 @@ import Toast from "react-native-toast-message";
 
 const BookPage = ({ navigation }) => {
   const [booking, setBooking] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState([])
 
   const getBooking = async () => {
     setLoading(true)
@@ -21,10 +22,13 @@ const BookPage = ({ navigation }) => {
       });
 
       const active = await data.filter(
-        (e) => e.status !== "checkoutSuccessfull" || e.status !== "failed"
+        (e) => e.status !== "checkoutSuccessfull" && e.status !== "failed" && e.status !== "cancelled"
       );
 
+      const his = await data.filter((e) => e.status === "checkoutSuccessfull" || e.status === "failed" || e.status === "cancelled" )
+
       setBooking(active);
+      setHistory(his);
       setLoading(false)
     } catch (error) {
       Toast.show({
@@ -39,8 +43,11 @@ const BookPage = ({ navigation }) => {
   };
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('tabPress', () => {
+      getBooking();
+    });
     getBooking();
-  }, [])
+  }, [navigation])
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.containerActive}>
@@ -51,6 +58,7 @@ const BookPage = ({ navigation }) => {
             name={booking[0]?.parkingSpot?.name}
             status={booking[0]?.status}
             until={booking[0]?.createdAt}
+            type={booking[0]?.spotDetail.type}
             isLoading={loading}
             onPress={() => navigation.navigate("BookingDetail", { transactionId: booking[0]._id })}
           />
@@ -66,15 +74,28 @@ const BookPage = ({ navigation }) => {
       <Text style={[styles.yourBooking, { marginTop: 24, paddingHorizontal: 24 }]}>
         Booking History
       </Text>
-      <ParkingHistory />
-      <ParkingHistory />
-      <ParkingHistory />
-      <ParkingHistory />
-      <ParkingHistory />
-      <ParkingHistory />
-      <ParkingHistory />
-      <ParkingHistory />
-      <ParkingHistory />
+      {
+        history.map((e) => {
+          return (
+            <ParkingHistory 
+              key={e._id} 
+              name={e.parkingSpot.name}
+              type={e.spotDetail.type}
+              time={e.createdAt}
+              book={e.bookingFee}
+              pay={e.paymentFee}
+              status={e.status}
+            />
+          )
+        })
+      }
+      {
+        history.length === 0 && (
+          <View>
+            <Text style={{ color: '#6C757D', textAlign: 'center', fontWeight: '700', marginTop: 30 }}>Empty.</Text>
+          </View>
+        )
+      }
       <View style={{ marginBottom: 120 }} />
     </ScrollView>
   );

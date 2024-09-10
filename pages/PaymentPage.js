@@ -21,7 +21,7 @@ const PaymentPage = ({ navigation, route }) => {
   };
   return (
     <View style={styles.container}>
-      <Header title={"Payment"} onPress={() => navigation.replace('TabNavigator', { screen: 'Book' })} />
+      <Header title={"Payment"} onPress={() => route.params.type ? navigation.goBack() : navigation.replace('TabNavigator', { screen: 'Book' })} />
       <WebView
         source={{
           uri: url

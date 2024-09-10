@@ -38,7 +38,7 @@ const HomeActiveBooking = ({
     let minute = new Date(until).getMinutes();
 
     if (hour > 23 && minute > 0) {
-      let newDate = new Date(until).setDate(new Date(until).getDate() + 2);
+      let newDate = new Date(until).setDate(new Date(until).getDate() + 1);
       date = new Date(newDate).toLocaleDateString("id-ID", {
         timeZone: "Asia/Bangkok",
         dayPeriod: "narrow",
@@ -67,7 +67,7 @@ const HomeActiveBooking = ({
     return (
       // if empty
       <TouchableOpacity style={styles.containerEmpty}>
-        <Text>You havent booking yet.</Text>
+        <Text>You don't have active booking</Text>
         <TouchableOpacity style={styles.buttonBookNow} onPress={onPress}>
           <Text style={styles.bookNowText}>Book Now</Text>
         </TouchableOpacity>
@@ -145,7 +145,7 @@ const HomeActiveBooking = ({
           {stat === "bookingPending" && "Waiting Booking Payment"}
           {stat === "bookingSuccessfull" && "Waiting you to check in"}
           {stat === "parking" && "Parking"}
-          {stat === "checkoutPending" && "Waiting Payment"}
+          {stat === "checkoutPending" && "You're ready to checkout"}
         </Text>
       </View>
     </TouchableOpacity>
@@ -156,9 +156,14 @@ export default HomeActiveBooking;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#e2e2e2",
+    backgroundColor: "#e2ef2e2",
     padding: 12,
     borderRadius: 12,
+    borderColor: '#e2e2e2',
+    borderWidth: 1,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 5, height: 3 }
   },
   innerContainerTop: {
     flexDirection: "row",
@@ -199,12 +204,17 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   containerEmpty: {
-    backgroundColor: "#e2e2e2",
+    backgroundColor: "#fff",
     padding: 8,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
     minHeight: 190,
+    borderColor: '#e2e2e2',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 5, height: 3 },
+    elevation: 3,
   },
   buttonBookNow: {
     width: "50%",

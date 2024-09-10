@@ -10,6 +10,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import DataBanner from "../datas/DataBanner";
 import Toast from "react-native-toast-message";
 import { api } from "../utils/axios";
+import { useFocusEffect } from "@react-navigation/native";
 const HomePage = ({ navigation }) => {
   // console.log(SecureStore.getItem('access_token'))
   const [bestSpot, setBestSpot] = useState([]);
@@ -45,7 +46,7 @@ const HomePage = ({ navigation }) => {
       });
 
       const active = await data.filter(
-        (e) => e.status !== "checkoutSuccessfull" || e.status !== "failed"
+        (e) => e.status !== "checkoutSuccessfull" && e.status !== "failed" && e.status !== "cancelled"
       );
       setBooking(active);
       setIsGettingData(false)
@@ -60,9 +61,12 @@ const HomePage = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getBestSpot();
+    const unsubscribe = navigation.addListener('tabPress', () => {
+      getBooking();
+    });
     getBooking();
-  }, []);
+    getBestSpot();
+  }, [navigation]);
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <HomeSearchBar
@@ -78,6 +82,7 @@ const HomePage = ({ navigation }) => {
             name={booking[0]?.parkingSpot?.name}
             status={booking[0]?.status}
             until={booking[0]?.createdAt}
+            type={booking[0]?.spotDetail.type}
             isLoading={isGettingData}
             onPress={() => navigation.navigate("BookingDetail", { transactionId: booking[0]._id })}
           />

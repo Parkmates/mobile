@@ -17,12 +17,40 @@ import Toast from "react-native-toast-message";
 import { api } from "../utils/axios";
 import * as SecureStore from "expo-secure-store";
 import Loading from "../components/Loading";
+import Foundation from "@expo/vector-icons/Foundation";
 
 const BookingDetail = ({ navigation, route }) => {
   const { width } = Dimensions.get("window");
   const [loading, setLoading] = useState(false);
   const [transaction, setTransaction] = useState([]);
+  const [needPay, setNeedPay] = useState(true);
   // const stat = transaction[0]?.status;
+  const checkinTime = (time) => {
+    let hour = new Date(time).getHours();
+    let minute = new Date(time).getMinutes();
+
+    let formatedHours = hour < 10 ? "0" + hour : hour;
+    let formatedMinutes = minute < 10 ? "0" + minute : minute;
+
+    return `${formatedHours}:${formatedMinutes}`;
+  };
+
+  const hourParking = (time) => {
+    let now = new Date().getHours();
+    let checkin = new Date(time).getHours();
+
+    let nowMin = new Date().getMinutes();
+    let checkinMin = new Date(time).getMinutes();
+
+    let parkingHour = now - checkin;
+    let parkingMin = nowMin - checkinMin;
+
+    if (parkingMin > 0) {
+      parkingHour = parkingHour + 1;
+    }
+
+    return parkingHour;
+  };
 
   const dateFormat = (until) => {
     let date = new Date(until).toLocaleDateString("id-ID", {
@@ -55,8 +83,6 @@ const BookingDetail = ({ navigation, route }) => {
     return `${formatedHours}:${formatedMinutes}, ${date}`;
   };
 
-  const handleCheckout = async () => {};
-
   const getData = async () => {
     setLoading(true);
     try {
@@ -77,6 +103,48 @@ const BookingDetail = ({ navigation, route }) => {
           text2: error.response.data.msg,
         });
         console.log(error);
+      }
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const paymentDB = transaction[0]?.paymentFee;
+      const toPay =
+        hourParking(transaction[0]?.checkinAt) * transaction[0]?.spotDetail.fee;
+
+      let finalAmount = toPay - paymentDB;
+
+      if(finalAmount === 0) {
+        finalAmount = 2500
+      }
+
+      const payment = await api({
+        method: "POST",
+        url: "/api/payment",
+        data: {
+          type: "payment",
+          trxId: transaction[0]._id,
+          amount: finalAmount,
+        },
+      });
+
+      navigation.navigate("PaymentPage", {
+        type: "payment",
+        url: payment.data.paymentUrl.redirect_url,
+      });
+      setLoading(false);
+    } catch (error) {
+      if (error.response) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: error.response?.data.msg,
+        });
+        console.log(error.response.data.msg);
       }
       console.log(error);
       setLoading(false);
@@ -106,7 +174,8 @@ const BookingDetail = ({ navigation, route }) => {
             {transaction[0]?.status === "bookingSuccessfull" &&
               "Waiting you to check in"}
             {transaction[0]?.status === "parking" && "Parking ..."}
-            {transaction[0]?.status === "checkoutPending" && "You are ready to checkout"}
+            {transaction[0]?.status === "checkoutPending" &&
+              "You're ready to checkout"}
           </Text>
           <View style={[styles.statusContainer]}>
             <View style={[styles.miniContainer, { marginBottom: 0 }]}>
@@ -125,10 +194,66 @@ const BookingDetail = ({ navigation, route }) => {
                   "Waiting you to check in"}
                 {transaction[0]?.status === "parking" && "Parking"}
                 {transaction[0]?.status === "checkoutPending" &&
-                  "Waiting Payment"}
+                  "You're ready to checkout"}
               </Text>
             </View>
           </View>
+          {transaction[0]?.status === "parking" && (
+            <View style={[styles.statusContainer]}>
+              <View style={[styles.miniContainer]}>
+                <View
+                  style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}
+                >
+                  <MaterialCommunityIcons
+                    name="clock-check-outline"
+                    size={24}
+                    color="#007BFF"
+                  />
+                  <Text style={{ color: "#6C757D" }}>Checkin Time</Text>
+                </View>
+                <Text>{checkinTime(transaction[0]?.checkinAt)}</Text>
+              </View>
+              <View style={[styles.miniContainer]}>
+                <View
+                  style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}
+                >
+                  {/* <MaterialCommunityIcons
+                  name="clock-time-eight-outline"
+                  size={24}
+                  color="#007BFF"
+                /> */}
+                  <Foundation
+                    name="dollar"
+                    size={28}
+                    color="#007BFF"
+                    style={{ paddingHorizontal: 6 }}
+                  />
+                  <Text style={{ color: "#6C757D" }}>Hourly Rate</Text>
+                </View>
+                <Text>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(transaction[0]?.spotDetail.fee)}
+                </Text>
+              </View>
+              <View style={[styles.miniContainer, { marginBottom: 0 }]}>
+                <View
+                  style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}
+                >
+                  <MaterialCommunityIcons
+                    name="clock-time-eight-outline"
+                    size={24}
+                    color="#007BFF"
+                  />
+                  <Text style={{ color: "#6C757D" }}>Hour Count</Text>
+                </View>
+                <Text>{hourParking(transaction[0]?.checkinAt)}</Text>
+              </View>
+            </View>
+          )}
+
           <View style={styles.statusContainer}>
             <View style={styles.miniContainer}>
               <View style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}>
@@ -167,6 +292,31 @@ const BookingDetail = ({ navigation, route }) => {
               <Text>{transaction[0]?.spotDetail?.area}</Text>
             </View>
             <View style={[styles.miniContainer, { marginBottom: 0 }]}>
+                <View
+                  style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}
+                >
+                  {/* <MaterialCommunityIcons
+                  name="clock-time-eight-outline"
+                  size={24}
+                  color="#007BFF"
+                /> */}
+                  <Foundation
+                    name="dollar"
+                    size={28}
+                    color="#007BFF"
+                    style={{ paddingHorizontal: 6 }}
+                  />
+                  <Text style={{ color: "#6C757D" }}>Book Fee</Text>
+                </View>
+                <Text>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(transaction[0]?.bookingFee)}
+                </Text>
+              </View>
+            <View style={[styles.miniContainer, { marginBottom: 0 }]}>
               <View style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}>
                 <MaterialCommunityIcons
                   name="clock-time-eight-outline"
@@ -177,7 +327,68 @@ const BookingDetail = ({ navigation, route }) => {
               </View>
               <Text>{dateFormat(transaction[0]?.createdAt)}</Text>
             </View>
+            {/* <View style={{ position: 'absolute', backgroundColor: 'rgba(208, 208, 208, 0.3)', top: 0, bottom: 0, left: 0, right: 0, borderRadius: 10 }} /> */}
           </View>
+
+          {transaction[0]?.status === "checkoutPending" ||
+          transaction[0]?.status === "checkoutSuccessfull" ? (
+            <View style={[styles.statusContainer]}>
+              <View style={[styles.miniContainer]}>
+                <View
+                  style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}
+                >
+                  <MaterialCommunityIcons
+                    name="clock-check-outline"
+                    size={24}
+                    color="#007BFF"
+                  />
+                  <Text style={{ color: "#6C757D" }}>Checkin Time</Text>
+                </View>
+                <Text>{checkinTime(transaction[0]?.checkinAt)}</Text>
+              </View>
+              <View style={[styles.miniContainer]}>
+                <View
+                  style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}
+                >
+                  <MaterialCommunityIcons
+                    name="clock-check-outline"
+                    size={24}
+                    color="#007BFF"
+                  />
+                  <Text style={{ color: "#6C757D" }}>Checkout Time</Text>
+                </View>
+                <Text>{checkinTime(transaction[0]?.paymentAt)}</Text>
+              </View>
+              <View style={[styles.miniContainer, { marginBottom: 0 }]}>
+                <View
+                  style={[styles.miniContainer, { gap: 8, marginBottom: 0 }]}
+                >
+                  {/* <MaterialCommunityIcons
+                  name="clock-time-eight-outline"
+                  size={24}
+                  color="#007BFF"
+                /> */}
+                  <Foundation
+                    name="dollar"
+                    size={28}
+                    color="#007BFF"
+                    style={{ paddingHorizontal: 6 }}
+                  />
+                  <Text style={{ color: "#6C757D" }}>Paid</Text>
+                </View>
+                <Text>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(transaction[0]?.paymentFee)}
+                </Text>
+              </View>
+            </View>
+          ) : (
+            ""
+          )}
+
           {transaction[0]?.status === "bookingSuccessfull" && (
             <TouchableOpacity
               style={styles.buttonCheckin}
@@ -187,7 +398,19 @@ const BookingDetail = ({ navigation, route }) => {
                 })
               }
             >
-              <Text style={styles.buttonText}>Check-in Now</Text>
+              <Text style={styles.buttonText}>Checkin Now</Text>
+            </TouchableOpacity>
+          )}
+          {transaction[0]?.status === "checkoutPending" && (
+            <TouchableOpacity
+              style={styles.buttonCheckin}
+              onPress={() =>
+                navigation.navigate("ShowQrCode", {
+                  trxId: route.params.transactionId,
+                })
+              }
+            >
+              <Text style={styles.buttonText}>Checkout Now</Text>
             </TouchableOpacity>
           )}
           {transaction[0]?.status === "bookingPending" && (
@@ -230,10 +453,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   statusContainer: {
-    backgroundColor: "rgba(208, 208, 208, 0.3)",
+    // backgroundColor: "rgba(208, 208, 208, 0.3)",
+    backgroundColor: "#fff",
     padding: 12,
     borderRadius: 10,
     marginBottom: 12,
+    borderColor: '#e2e2e2',
+    borderWidth: 1,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 5, height: 3 }
   },
   miniContainer: {
     flexDirection: "row",

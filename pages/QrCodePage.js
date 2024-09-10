@@ -49,7 +49,7 @@ export default function QrCodePage({ navigation }) {
       </View>
       <TouchableOpacity
         onPress={() => {
-          navigation.goBack();
+          navigation.replace("TabNavigator", { screen: "Book" });
         }}
         style={{
           width: "100%",
