@@ -430,7 +430,7 @@ const BookingDetail = ({ navigation, route }) => {
               style={styles.buttonCheckin}
               onPress={handleCheckout}
             >
-              <Text style={styles.buttonText}>Checkout Now</Text>
+              <Text style={styles.buttonText}>Pay to Checkout</Text>
             </TouchableOpacity>
           )}
         </View>

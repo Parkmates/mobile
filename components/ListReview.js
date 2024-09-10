@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 
-export default function ListReview({ user, refetch, status }) {
+export default function ListReview({ user, comment }) {
   return (
     <View
       style={{
@@ -8,8 +8,8 @@ export default function ListReview({ user, refetch, status }) {
         alignItems: "center",
         gap: 10,
         padding: 20,
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 24,
+        paddingRight: 24,
         borderBottomWidth: 0.5,
         borderColor: "#323232",
       }}
@@ -35,8 +35,8 @@ export default function ListReview({ user, refetch, status }) {
             gap: 5,
           }}
         >
-          <Text style={{ fontWeight: "bold" }}>user.name</Text>
-          <Text style={{ color: "#727272" }}>isi review</Text>
+          <Text style={{ fontWeight: "bold" }}>{user}</Text>
+          <Text style={{ color: "#727272" }}>{comment}</Text>
         </View>
       </View>
     </View>

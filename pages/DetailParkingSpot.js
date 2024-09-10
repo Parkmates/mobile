@@ -32,6 +32,7 @@ export default function DetailParkingSpot({ navigation, route }) {
   const [spotDetails, setSpotDetails] = useState([]);
   const [paginationIndex, setPaginationIndex] = useState(0);
   const [image, setImage] = useState([]);
+  const [review, setReview] = useState([]);
   // console.log(id)
   const dummy = [1, 2, 3, 4, 5];
 
@@ -51,13 +52,15 @@ export default function DetailParkingSpot({ navigation, route }) {
       if (vehicle) {
         const filter = await data.spotList.filter((e) => e.type === vehicle);
         setParkSpot(data);
-        setImage(data.imgUrl)
+        setReview(data.reviews);
+        setImage(data.imgUrl);
         setSpotDetails(filter);
         return;
       }
 
       setParkSpot(data);
-      setImage(data.imgUrl)
+      setImage(data.imgUrl);
+      setReview(data.reviews);
       setSpotDetails(data?.spotList);
     } catch (error) {
       Toast.show({
@@ -71,6 +74,9 @@ export default function DetailParkingSpot({ navigation, route }) {
   };
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('tabPress', () => {
+      getData();
+    });
     getData();
   }, [vehicle]);
   return (
@@ -219,11 +225,17 @@ export default function DetailParkingSpot({ navigation, route }) {
                 />
               );
             })}
-            {
-              spotDetails.length < 1 && (
-                <Text style={{ textAlign: 'center', fontWeight: '700', color: '#6C757D' }}>Sorry, it's empty!</Text>
-              )
-            }
+            {spotDetails.length < 1 && (
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontWeight: "700",
+                  color: "#6C757D",
+                }}
+              >
+                Sorry, it's empty!
+              </Text>
+            )}
           </View>
           <View style={{ height: 80 }} />
         </View>
@@ -246,10 +258,13 @@ export default function DetailParkingSpot({ navigation, route }) {
               height: 50,
               alignItems: "center",
               justifyContent: "center",
-              elevation: 10
+              elevation: 10,
             }}
             onPress={() => {
-              navigation.navigate("ConfirmationBooking", { id: id, spotId: activeSpotDetail });
+              navigation.navigate("ConfirmationBooking", {
+                id: id,
+                spotId: activeSpotDetail,
+              });
             }}
           >
             <Text style={{ color: "white" }}>
@@ -274,33 +289,29 @@ export default function DetailParkingSpot({ navigation, route }) {
           // backgroundStyle={{ backgroundColor: "rgba(255, 255, 255, 0.75)" }}
           // style={{ backgroundColor: 'red', flex: 1, topOffset: 0 }}
         >
+          <Text
+            style={{
+              fontWeight: "bold",
+              paddingBottom: 10,
+              textAlign: "center",
+              fontSize: 16,
+            }}
+          >
+            Review
+          </Text>
+          <Hr />
           <BottomSheetScrollView
             showsVerticalScrollIndicator={false}
             style={{ backgroundColor: "#fff" }}
           >
-            <Text
-              style={{
-                fontWeight: "bold",
-                paddingBottom: 10,
-                textAlign: "center",
-                fontSize: 16,
-              }}
-            >
-              Review
-            </Text>
-            <Hr />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <ListReview />
-            <Text
+            {review.map((e) => {
+              return <ListReview 
+                key={e._id}
+                user={e.user.name}
+                comment={e.comment}
+              />;
+            })}
+            {/* <Text
               style={{
                 paddingVertical: 20,
                 textAlign: "center",
@@ -308,7 +319,7 @@ export default function DetailParkingSpot({ navigation, route }) {
               }}
             >
               Yay! you have seen it all
-            </Text>
+            </Text> */}
           </BottomSheetScrollView>
         </BottomSheet>
       )}
@@ -318,16 +329,16 @@ export default function DetailParkingSpot({ navigation, route }) {
 
 const styles = StyleSheet.create({
   dotContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 16,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 16,
   },
   dot: {
-      backgroundColor: '#aaa',
-      height: 6,
-      width: 6,
-      marginHorizontal: 2,
-      borderRadius: 6,
-  }
-})
+    backgroundColor: "#aaa",
+    height: 6,
+    width: 6,
+    marginHorizontal: 2,
+    borderRadius: 6,
+  },
+});

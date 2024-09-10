@@ -11,7 +11,7 @@ export default function ParkingHistory({
   status,
 }) {
   return (
-    <View style={{ paddingHorizontal: 20 }}>
+    <View style={{ paddingHorizontal: 24 }}>
       <View
         style={{
           borderBottomWidth: 0.5,
@@ -57,13 +57,24 @@ export default function ParkingHistory({
               </Text>
             </View>
           </View>
-          <Text>
+          {status === "cancelled" || status === "failed" ? (
+            <Text style={{ color: 'red' }}>{status === "cancelled" ? "CancelLed" : "Failed"}</Text>
+          ) : (
+            <Text>
+              {new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                maximumFractionDigits: 0,
+              }).format(book + pay)}
+            </Text>
+          )}
+          {/* <Text>
             {new Intl.NumberFormat("id-ID", {
               style: "currency",
               currency: "IDR",
               maximumFractionDigits: 0,
             }).format(book + pay)}
-          </Text>
+          </Text> */}
         </View>
       </View>
     </View>
