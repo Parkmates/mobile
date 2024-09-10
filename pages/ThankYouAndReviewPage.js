@@ -12,16 +12,54 @@ import LottieView from "lottie-react-native";
 import { Rating } from "react-native-ratings";
 import { useState } from "react";
 import { authStyles } from "../styles/auth";
-export default function ThankYouAndReviewPage({ navigation }) {
-  const [rating, setRating] = useState(0);
+import Toast from "react-native-toast-message";
+import Loading from "../components/Loading";
+import { api } from "../utils/axios";
+import * as SecureStore from "expo-secure-store";
+
+export default function ThankYouAndReviewPage({ navigation, route }) {
+  const [rating, setRating] = useState(5);
   const [review, setReview] = useState("");
-  const handleSubmit = () => {
-    Keyboard.dismiss();
-    navigation.navigate("TabNavigator", {
-      screen: "Home",
-    });
-    console.log(rating, review);
+  const [loading, setLoading] = useState(false);
+  const spotId = route.params.spotId;
+
+  const postReview = async () => {
+    setLoading(true)
+    try {
+      if (review === "" || rating === 0) {
+        Toast.show({
+          type: "info",
+          text1: "Rating or Review should have a value",
+        });
+        setLoading(false)
+        return;
+      }
+
+      const { data } = await api({
+        method: 'POST',
+        url: '/api/reviews',
+        headers: {
+          Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
+        },
+        data: {
+          spotId: spotId,
+          rating: rating,
+          comment: review
+        }
+      })
+      navigation.replace('TabNavigator')
+      setLoading(false)
+    } catch (error) {
+      Toast.show({
+        type: "info",
+        text1: "Error",
+        text2: error.response.data.msg
+      });
+      console.log(error)
+      setLoading(false)
+    }
   };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -74,7 +112,7 @@ export default function ThankYouAndReviewPage({ navigation }) {
               onChangeText={setReview}
             />
             <TouchableOpacity
-              onPress={handleSubmit}
+              onPress={postReview}
               style={authStyles.submitBtn}
             >
               <Text style={{ color: "white" }}>
@@ -89,6 +127,7 @@ export default function ThankYouAndReviewPage({ navigation }) {
           </View>
         </View>
       </View>
+      {loading && <Loading/>}
     </KeyboardAvoidingView>
   );
 }

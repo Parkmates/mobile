@@ -5,7 +5,7 @@ import { useRoute } from "@react-navigation/native";
 
 export default function QrCodePage({ navigation }) {
   const route = useRoute();
-  const { trxId } = route.params;
+  const { trxId, type, spotId } = route.params;
 
   return (
     <View
@@ -49,7 +49,7 @@ export default function QrCodePage({ navigation }) {
       </View>
       <TouchableOpacity
         onPress={() => {
-          navigation.replace("TabNavigator", { screen: "Book" });
+          type ? navigation.navigate('ThankYouAndReview', { spotId: spotId }) : navigation.replace("TabNavigator", { screen: "Book" });
         }}
         style={{
           width: "100%",
