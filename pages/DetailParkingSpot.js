@@ -21,6 +21,7 @@ import Hr from "../components/Hr";
 import Toast from "react-native-toast-message";
 import { api } from "../utils/axios";
 import * as SecureStore from "expo-secure-store";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function DetailParkingSpot({ navigation, route }) {
   const id = route.params.id;
