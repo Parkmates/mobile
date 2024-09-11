@@ -31,7 +31,8 @@
     "react-native-screens": "3.31.1",
     "react-native-toast-message": "^2.2.0",
     "react-native-webview": "13.8.6",
-    "react-native-svg": "^15.6.0"
+    "react-native-svg": "^15.6.0",
+    "expo-updates": "~0.25.24"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
