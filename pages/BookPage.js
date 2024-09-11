@@ -26,14 +26,14 @@ const BookPage = ({ navigation }) => {
         (e) =>
           e.status !== "checkoutSuccessfull" &&
           e.status !== "failed" &&
-          e.status !== "cancelled"
+          e.status !== "canceled"
       );
 
       const his = await data.filter(
         (e) =>
           e.status === "checkoutSuccessfull" ||
           e.status === "failed" ||
-          e.status === "cancelled"
+          e.status === "canceled"
       );
 
       setBooking(active);
