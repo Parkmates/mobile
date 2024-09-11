@@ -16,31 +16,35 @@ import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
 
 export default function ListParkingPage({ navigation }) {
-  const [keyword, setKeyword] = useState("");
   const [parkSpot, setParkSpot] = useState([]);
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const getData = async () => {
+    setLoading(true);
     try {
       const { data } = await api({
-        url: "/api/parkspot",
+        url: `/api/parkspot?name=${name}`,
         headers: {
           Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
         },
       });
       // console.log(data)
       setParkSpot(data);
+      setLoading(false);
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Error",
         text2: error.response?.data.msg,
       });
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getData();
-  }, [])
+  }, [name]);
   return (
     <SafeAreaView style={globalStyles.container}>
       <>
@@ -77,8 +81,8 @@ export default function ListParkingPage({ navigation }) {
                   paddingLeft: 10,
                 }}
                 placeholder="Search"
-                value={keyword}
-                onChangeText={setKeyword}
+                value={name}
+                onChangeText={(value) => setName(value)}
               />
             </View>
           </View>
@@ -101,13 +105,17 @@ export default function ListParkingPage({ navigation }) {
             showsVerticalScrollIndicator={false}
           >
             {parkSpot.map((e) => {
-              return <ParkList 
-                key={e._id} 
-                onPress={() => navigation.navigate('DetailParking', { id: e._id })}
-                name={e.name}
-                address={e.address}
-                img={e.imgUrl[0]}
-              />;
+              return (
+                <ParkList
+                  key={e._id}
+                  onPress={() =>
+                    navigation.navigate("DetailParking", { id: e._id })
+                  }
+                  name={e.name}
+                  address={e.address}
+                  img={e.imgUrl[0]}
+                />
+              );
             })}
             {/* <ParkList />
             <ParkList />
@@ -116,10 +124,20 @@ export default function ListParkingPage({ navigation }) {
             <ParkList />
             <ParkList />
             <ParkList /> */}
+            {loading === false && parkSpot.length === 0 && (
+              <Text
+                style={{
+                  color: "#6C757D",
+                  textAlign: "center",
+                }}
+              >
+                Sorry, Parking spot not found
+              </Text>
+            )}
+            {loading && <ActivityIndicator size={"large"} color={"#007BFF"} />}
             <View style={{ height: 120 }} />
           </ScrollView>
         </View>
-        {parkSpot.length === 0 && <ActivityIndicator size={'large'} color={"#007BFF"} />}
       </>
     </SafeAreaView>
   );
