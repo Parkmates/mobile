@@ -271,6 +271,7 @@ export default function DetailParkingSpot({ navigation, route }) {
                 id: id,
                 spotId: activeSpotDetail,
               });
+              setActiveSpotDetail("")
             }}
           >
             <Text style={{ color: "white" }}>
