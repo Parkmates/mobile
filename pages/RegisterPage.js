@@ -8,10 +8,13 @@ import {
   Platform,
   Alert,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { authStyles } from "../styles/auth";
 import { api } from "../utils/axios";
 import Toast from "react-native-toast-message";
+import logo from "../assets/logo.png";
+
 export default function RegisterPage({ navigation }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -64,6 +67,13 @@ export default function RegisterPage({ navigation }) {
       style={{ flex: 1 }}
     >
       <View style={authStyles.container}>
+        <View style={{ width: "100%", height: 100 }}>
+          <Image
+            source={logo}
+            resizeMode="contain"
+            style={{ flexShrink: 1, width: "70%" }}
+          />
+        </View>
         <View
           style={{
             display: "flex",
@@ -139,7 +149,10 @@ export default function RegisterPage({ navigation }) {
           onPress={() => navigation.navigate("Login")}
         >
           <Text>
-            Already have an account? <Text>Login</Text>
+            Already have an account?{" "}
+            <Text style={{ color: "#007BFF" }}>
+              Login
+            </Text>
           </Text>
         </TouchableOpacity>
       </View>
