@@ -20,6 +20,7 @@ import Loading from "../components/Loading";
 import Foundation from "@expo/vector-icons/Foundation";
 import BottomSheet from "@gorhom/bottom-sheet";
 import QRCode from "react-native-qrcode-svg";
+import { useFocusEffect } from "@react-navigation/native";
 
 const BookingDetail = ({ navigation, route }) => {
   const { width } = Dimensions.get("window");
@@ -178,6 +179,12 @@ const BookingDetail = ({ navigation, route }) => {
         })
       : "";
   }, [code, transaction]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>

@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   Text,
@@ -15,6 +16,7 @@ import { api } from "../utils/axios";
 // import { AuthContext } from "../context/Auth";
 import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
+import logo from "../assets/logo.png";
 
 export default function LoginPage({ navigation }) {
   // const { setIsLogin } = useContext(AuthContext);
@@ -42,7 +44,6 @@ export default function LoginPage({ navigation }) {
         type: "success",
         text1: "Success",
         text2: "Login Success",
-        topOffset: 50,
       });
       navigation.replace("TabNavigator");
     } catch (error) {
@@ -53,7 +54,6 @@ export default function LoginPage({ navigation }) {
         type: "error",
         text1: "Error",
         text2: error.response.data.msg,
-        topOffset: 50,
       });
       // console.log(error.response.data.msg);
     }
@@ -64,6 +64,13 @@ export default function LoginPage({ navigation }) {
       style={{ flex: 1 }}
     >
       <View style={authStyles.container}>
+        <View style={{ width: "100%", height: 100 }}>
+          <Image
+            source={logo}
+            resizeMode="contain"
+            style={{ flexShrink: 1, width: "70%" }}
+          />
+        </View>
         <View
           style={{
             display: "flex",
@@ -117,7 +124,7 @@ export default function LoginPage({ navigation }) {
 
         <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           <Text>
-            Don't have an account? <Text>Register</Text>
+            Don't have an account? <Text style={{ color: '#007BFF' }}>Register</Text>
           </Text>
         </TouchableOpacity>
       </View>

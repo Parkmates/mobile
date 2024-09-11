@@ -37,6 +37,7 @@ const EditProfilePage = ({ navigation }) => {
   };
 
   const getData = async () => {
+    setLoading(true)
     try {
       const { data } = await api({
         url: "/api/users/profile",
@@ -51,6 +52,7 @@ const EditProfilePage = ({ navigation }) => {
         email: data.email
       });
       setUser(data);
+      setLoading(false)
     } catch (error) {
       Toast.show({
         type: "error",
@@ -58,6 +60,7 @@ const EditProfilePage = ({ navigation }) => {
         text2: error.response.data.msg,
       });
       console.log(error);
+      setLoading(false)
     }
   };
 
