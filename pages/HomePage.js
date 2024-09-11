@@ -15,7 +15,7 @@ const HomePage = ({ navigation }) => {
   // console.log(SecureStore.getItem('access_token'))
   const [bestSpot, setBestSpot] = useState([]);
   const [booking, setBooking] = useState([]);
-  const [isGettingData, setIsGettingData] = useState(true)
+  const [isGettingData, setIsGettingData] = useState(false);
   const getBestSpot = async () => {
     try {
       const { data } = await api({
@@ -37,6 +37,7 @@ const HomePage = ({ navigation }) => {
   };
 
   const getBooking = async () => {
+    setIsGettingData(true);
     try {
       const { data } = await api({
         url: "/api/trx",
@@ -46,10 +47,13 @@ const HomePage = ({ navigation }) => {
       });
 
       const active = await data.filter(
-        (e) => e.status !== "checkoutSuccessfull" && e.status !== "failed" && e.status !== "cancelled"
+        (e) =>
+          e.status !== "checkoutSuccessfull" &&
+          e.status !== "failed" &&
+          e.status !== "cancelled"
       );
       setBooking(active);
-      setIsGettingData(false)
+      setIsGettingData(false);
     } catch (error) {
       Toast.show({
         type: "error",
@@ -57,16 +61,23 @@ const HomePage = ({ navigation }) => {
         text2: error.response.data.msg,
       });
       console.log(error.response.data);
+      setIsGettingData(false);
     }
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('tabPress', () => {
-      getBooking();
-    });
+    // const unsubscribe = navigation.addListener("tabPress", () => {
+    //   getBooking();
+    // });
     getBooking();
     getBestSpot();
   }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getBooking();
+    }, [])
+  );
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <HomeSearchBar
@@ -84,7 +95,11 @@ const HomePage = ({ navigation }) => {
             until={booking[0]?.createdAt}
             type={booking[0]?.spotDetail.type}
             isLoading={isGettingData}
-            onPress={() => navigation.navigate("BookingDetail", { transactionId: booking[0]._id })}
+            onPress={() =>
+              navigation.navigate("BookingDetail", {
+                transactionId: booking[0]._id,
+              })
+            }
           />
         )}
         {booking.length === 0 && (

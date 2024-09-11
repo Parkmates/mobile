@@ -13,6 +13,7 @@ import ThankYouAndReviewPage from "../pages/ThankYouAndReviewPage";
 import SplashScreen from "../pages/SplashScreen";
 import BookingDetail from "../pages/BookingDetail";
 import QrCodePage from "../pages/QrCodePage";
+import EditProfilePage from "../pages/EditProfilePage";
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +76,11 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
         name="ShowQrCode"
         component={QrCodePage}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="EditProfile"
+        component={EditProfilePage}
       />
       {/* <Stack.Screen name='Profile' component={ProfilePage} options={{ headerShown: false }}/> */}
     </Stack.Navigator>

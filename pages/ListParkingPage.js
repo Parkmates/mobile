@@ -120,6 +120,7 @@ export default function ListParkingPage({ navigation }) {
             <View style={{ height: 120 }} />
           </ScrollView>
         </View>
+        {parkSpot.length === 0 && <ActivityIndicator size={'large'} color={"#007BFF"} />}
       </>
     </SafeAreaView>
   );
