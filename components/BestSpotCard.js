@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Star } from "react-native-feather";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const BestSpotCard = ({ name, img, address, onPress }) => {
   return (
@@ -39,22 +39,25 @@ const styles = StyleSheet.create({
   },
   detailContainer: {
     padding: 8,
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
   },
   title: {
     fontWeight: "400",
-    fontSize: 16,
+    fontSize: 12,
   },
   address: {
-    fontSize: 12,
+    fontSize: 10,
     color: "#737373",
   },
   ratingContainer: {
     marginTop: 4,
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 4,
-    alignItems: 'center'
+    alignItems: "center",
   },
   ratingNumber: {
-    fontSize: 12
-  }
+    fontSize: 12,
+  },
 });
