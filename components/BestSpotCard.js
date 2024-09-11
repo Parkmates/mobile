@@ -16,7 +16,7 @@ const BestSpotCard = ({ name, img, address, onPress }) => {
         style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
       />
       <View style={styles.detailContainer}>
-        <Text style={styles.title}>{name}</Text>
+        <Text style={styles.title} numberOfLines={1}>{name}</Text>
         <Text style={styles.address} numberOfLines={3}>
           {address}
         </Text>
