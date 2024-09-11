@@ -34,7 +34,6 @@ export default function ListParkingPage({ navigation }) {
         type: "error",
         text1: "Error",
         text2: error.response?.data.msg,
-        topOffset: 50,
       });
     }
   };

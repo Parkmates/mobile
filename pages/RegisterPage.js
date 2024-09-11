@@ -43,7 +43,6 @@ export default function RegisterPage({ navigation }) {
         type: "success",
         text1: "Success",
         text2: "Register Success, Please Login",
-        topOffset: 50,
       });
 
       navigation.replace("Login");
@@ -55,7 +54,6 @@ export default function RegisterPage({ navigation }) {
         type: "error",
         text1: "Error",
         text2: error.response.data.msg,
-        topOffset: 50,
       });
     }
   };

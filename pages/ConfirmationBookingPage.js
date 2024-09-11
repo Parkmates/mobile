@@ -83,7 +83,6 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
           type: "error",
           text1: "Error",
           text2: error.response.data.msg,
-          topOffset: 50,
         });
       } else {
         console.log(error);
@@ -111,7 +110,6 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
           type: "error",
           text1: "Error",
           text2: error.response.msg,
-          topOffset: 50,
         });
       } else {
         console.log(error);

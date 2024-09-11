@@ -67,7 +67,6 @@ export default function DetailParkingSpot({ navigation, route }) {
         type: "error",
         text1: "Error",
         text2: error.response.msg || error.message,
-        topOffset: 50,
       });
       console.log(error);
     }

@@ -42,7 +42,6 @@ export default function LoginPage({ navigation }) {
         type: "success",
         text1: "Success",
         text2: "Login Success",
-        topOffset: 50,
       });
       navigation.replace("TabNavigator");
     } catch (error) {
@@ -53,7 +52,6 @@ export default function LoginPage({ navigation }) {
         type: "error",
         text1: "Error",
         text2: error.response.data.msg,
-        topOffset: 50,
       });
       // console.log(error.response.data.msg);
     }
