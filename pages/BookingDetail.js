@@ -27,6 +27,7 @@ const BookingDetail = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [transaction, setTransaction] = useState([]);
   const [code, setCode] = useState(false);
+  const [isCancel, setIsCancel] = useState(false);
   // const stat = transaction[0]?.status;
   const checkinTime = (time) => {
     let hour = new Date(time).getHours();
@@ -160,11 +161,30 @@ const BookingDetail = ({ navigation, route }) => {
     }
   };
 
-  const checkData = async () => {
-    if (transaction[0]?.status === "checkoutSuccessfull") {
-      navigation.replace("ThankYouAndReview", {
-        spotId: transaction[0]?.parkingSpot._id,
+  const cancelBooking = async () => {
+    setLoading(true);
+    try {
+      const { data } = await api({
+        method: "PUT",
+        url: `/api/trx/${route.params.transactionId}/cancel`,
+        headers: {
+          Authorization: `Bearer ${SecureStore.getItem("access_token")}`,
+        },
       });
+
+      navigation.goBack();
+      setLoading(false);
+    } catch (error) {
+      if (error.response) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: error.response?.data.msg,
+        });
+        console.log(error.response.data.msg);
+      }
+      console.log(error);
+      setLoading(false);
     }
   };
 
@@ -418,17 +438,27 @@ const BookingDetail = ({ navigation, route }) => {
           )}
 
           {transaction[0]?.status === "bookingSuccessfull" && (
-            <TouchableOpacity
-              style={styles.buttonCheckin}
-              onPress={() =>
-                // navigation.navigate("ShowQrCode", {
-                //   trxId: route.params.transactionId,
-                // })
-                setCode(true)
-              }
-            >
-              <Text style={styles.buttonText}>Checkin Now</Text>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={styles.buttonCheckin}
+                onPress={() =>
+                  // navigation.navigate("ShowQrCode", {
+                  //   trxId: route.params.transactionId,
+                  // })
+                  setCode(true)
+                }
+              >
+                <Text style={styles.buttonText}>Checkin Now</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ marginTop: 12 }}
+                onPress={() => setIsCancel(true)}
+              >
+                <Text style={{ color: "#6C757D", textAlign: "center" }}>
+                  Cancel Booking
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
           {transaction[0]?.status === "checkoutPending" && (
             <TouchableOpacity
@@ -446,16 +476,26 @@ const BookingDetail = ({ navigation, route }) => {
             </TouchableOpacity>
           )}
           {transaction[0]?.status === "bookingPending" && (
-            <TouchableOpacity
-              style={styles.buttonCheckin}
-              onPress={() =>
-                navigation.navigate("PaymentPage", {
-                  url: transaction[0]?.paymentUrl,
-                })
-              }
-            >
-              <Text style={styles.buttonText}>Pay Now</Text>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={styles.buttonCheckin}
+                onPress={() =>
+                  navigation.navigate("PaymentPage", {
+                    url: transaction[0]?.paymentUrl,
+                  })
+                }
+              >
+                <Text style={styles.buttonText}>Pay Now</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ marginTop: 12 }}
+                onPress={() => setIsCancel(true)}
+              >
+                <Text style={{ color: "#6C757D", textAlign: "center" }}>
+                  Cancel Booking
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
           {transaction[0]?.status === "parking" && (
             <TouchableOpacity
@@ -532,6 +572,76 @@ const BookingDetail = ({ navigation, route }) => {
               >
                 <Text style={{ color: "white" }}>Done</Text>
               </TouchableOpacity>
+            </View>
+          </View>
+        </BottomSheet>
+      )}
+      {isCancel && (
+        <BottomSheet
+          snapPoints={["20%"]}
+          onClose={() => setIsCancel(false)}
+          enablePanDownToClose={true}
+          // backgroundStyle={{ backgroundColor: "rgba(255, 255, 255, 0.75)" }}
+          style={{ color: "red", flex: 1, topOffset: 0 }}
+          containerStyle={{ backgroundColor: "rgba(0, 0, 0, 0.50)" }}
+        >
+          <View
+            style={{
+              padding: 24,
+              flex: 1,
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+              Are you sure to cancel this booking?
+            </Text>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                gap: 8,
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsCancel(false);
+                  }}
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#007BFF",
+                    borderRadius: 10,
+                    height: 50,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ color: "white" }}>No, back to booking</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ flex: 1 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    cancelBooking();
+                    setIsCancel(false);
+                  }}
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#FFF",
+                    borderRadius: 10,
+                    height: 50,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderWidth: 1,
+                    borderColor: "#6C757D",
+                  }}
+                >
+                  <Text style={{ color: "#6C757D" }}>
+                    Yes, cancel this booking
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </BottomSheet>

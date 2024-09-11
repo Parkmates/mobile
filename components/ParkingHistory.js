@@ -57,8 +57,8 @@ export default function ParkingHistory({
               </Text>
             </View>
           </View>
-          {status === "cancelled" || status === "failed" ? (
-            <Text style={{ color: 'red' }}>{status === "cancelled" ? "CancelLed" : "Failed"}</Text>
+          {status === "canceled" || status === "failed" ? (
+            <Text style={{ color: 'red' }}>{status === "canceled" ? "Canceled" : "Failed"}</Text>
           ) : (
             <Text>
               {new Intl.NumberFormat("id-ID", {

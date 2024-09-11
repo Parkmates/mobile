@@ -50,7 +50,7 @@ const HomePage = ({ navigation }) => {
         (e) =>
           e.status !== "checkoutSuccessfull" &&
           e.status !== "failed" &&
-          e.status !== "cancelled"
+          e.status !== "canceled"
       );
       setBooking(active);
       setIsGettingData(false);
