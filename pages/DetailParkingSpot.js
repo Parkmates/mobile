@@ -13,7 +13,7 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ListReview from "../components/ListReview";
 import Header from "../components/Header";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import ChooseParkingSpot from "../components/ChooseParkingSpot";
