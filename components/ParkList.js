@@ -12,7 +12,7 @@ export default function ParkList({ onPress, name, address, img }) {
           flexDirection: "row",
           alignItems: "start",
           gap: 12,
-          padding: 20,
+          padding: 12,
           backgroundColor: "#F3F4F5",
           borderRadius: 10,
           marginBottom: 20,
@@ -78,7 +78,7 @@ export default function ParkList({ onPress, name, address, img }) {
               </View>
             </View>
             <Text style={{ fontWeight: "bold" }}>{name}</Text>
-            <Text style={{ color: "#727272" }} numberOfLines={2}>{address}</Text>
+            <Text style={{ color: "#727272", fontSize: 12 }} numberOfLines={2}>{address}</Text>
             {/* <View style={{ flexDirection: "row", gap: 10 }}>
               <Text style={{ color: "#727272", fontSize: 12 }}>harga/jam</Text>
               <Text style={{ color: "#727272", fontSize: 12 }}>

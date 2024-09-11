@@ -73,11 +73,17 @@ export default function DetailParkingSpot({ navigation, route }) {
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('tabPress', () => {
+    const unsubscribe = navigation.addListener("tabPress", () => {
       getData();
     });
     getData();
   }, [vehicle]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
   return (
     <View
       style={{
@@ -304,21 +310,28 @@ export default function DetailParkingSpot({ navigation, route }) {
             style={{ backgroundColor: "#fff" }}
           >
             {review.map((e) => {
-              return <ListReview 
-                key={e._id}
-                user={e.user.name}
-                comment={e.comment}
-              />;
+              return (
+                <ListReview
+                  key={e._id}
+                  user={e.user.name}
+                  comment={e.comment}
+                />
+              );
             })}
-            {/* <Text
-              style={{
-                paddingVertical: 20,
-                textAlign: "center",
-                fontSize: 14,
-              }}
-            >
-              Yay! you have seen it all
-            </Text> */}
+            {review.length === 0 && (
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  paddingBottom: 10,
+                  textAlign: "center",
+                  fontSize: 12,
+                  color: '#6C757D',
+                  marginTop: 24
+                }}
+              >
+                It's Empty
+              </Text>
+            )}
           </BottomSheetScrollView>
         </BottomSheet>
       )}

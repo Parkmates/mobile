@@ -135,7 +135,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
             style: "currency",
             currency: "IDR",
             maximumFractionDigits: 0,
-          }).format(spotDetail.type === 'car' ? 10000 : 5000)}
+          }).format(spotDetail.type ? spotDetail.type === 'car' ? 10000 : 5000 : "")}
         </Text>
         <Hr pad={16} />
         <View style={styles.containerDescription}>
@@ -162,7 +162,8 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
               Your Vehicle
             </Text>
             <Text style={styles.rightDescription}>
-              {spotDetail.type === "car" ? "Car" : "Motorcycle"}
+              {spotDetail.type === "car" && "Car"}
+              {spotDetail.type === "motorcycle" && "Motorcycle"}
             </Text>
           </View>
           {/* <View style={styles.containerDescriptionDetail}>
@@ -228,7 +229,7 @@ const ConfirmationBookingPage = ({ navigation, route }) => {
                     style: "currency",
                     currency: "IDR",
                     maximumFractionDigits: 0,
-                  }).format(spotDetail.type === 'car' ? 10000 : 5000)}
+                  }).format(spotDetail.type ? spotDetail.type === 'car' ? 10000 : 5000 : "")}
                 </Text>
                 <Text style={styles.leftDescription}>
                   {new Intl.NumberFormat("id-ID", {
