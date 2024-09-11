@@ -286,7 +286,7 @@ export default function DetailParkingSpot({ navigation, route }) {
           snapPoints={["80%"]}
           enablePanDownToClose={true}
           onClose={() => setIsOpen(false)}
-          // backgroundStyle={{ backgroundColor: "rgba(255, 255, 255, 0.75)" }}
+          containerStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
           // style={{ backgroundColor: 'red', flex: 1, topOffset: 0 }}
         >
           <Text

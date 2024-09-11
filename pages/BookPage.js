@@ -5,14 +5,15 @@ import ParkingHistory from "../components/ParkingHistory";
 import { api } from "../utils/axios";
 import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
+import { useFocusEffect } from "@react-navigation/native";
 
 const BookPage = ({ navigation }) => {
   const [booking, setBooking] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState([])
+  const [history, setHistory] = useState([]);
 
   const getBooking = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const { data } = await api({
         url: "/api/trx",
@@ -22,14 +23,22 @@ const BookPage = ({ navigation }) => {
       });
 
       const active = await data.filter(
-        (e) => e.status !== "checkoutSuccessfull" && e.status !== "failed" && e.status !== "cancelled"
+        (e) =>
+          e.status !== "checkoutSuccessfull" &&
+          e.status !== "failed" &&
+          e.status !== "cancelled"
       );
 
-      const his = await data.filter((e) => e.status === "checkoutSuccessfull" || e.status === "failed" || e.status === "cancelled" )
+      const his = await data.filter(
+        (e) =>
+          e.status === "checkoutSuccessfull" ||
+          e.status === "failed" ||
+          e.status === "cancelled"
+      );
 
       setBooking(active);
       setHistory(his);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       Toast.show({
         type: "error",
@@ -37,17 +46,20 @@ const BookPage = ({ navigation }) => {
         text2: error.response.data.msg,
       });
       console.log(error.response.data);
-      console.log(error)
-      setLoading(false)
+      console.log(error);
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('tabPress', () => {
+  // useEffect(() => {
+  //   getBooking();
+  // }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
       getBooking();
-    });
-    getBooking();
-  }, [navigation])
+    }, [])
+  );
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.containerActive}>
@@ -60,7 +72,11 @@ const BookPage = ({ navigation }) => {
             until={booking[0]?.createdAt}
             type={booking[0]?.spotDetail.type}
             isLoading={loading}
-            onPress={() => navigation.navigate("BookingDetail", { transactionId: booking[0]._id })}
+            onPress={() =>
+              navigation.navigate("BookingDetail", {
+                transactionId: booking[0]._id,
+              })
+            }
           />
         )}
         {booking.length === 0 && (
@@ -71,31 +87,38 @@ const BookPage = ({ navigation }) => {
           />
         )}
       </View>
-      <Text style={[styles.yourBooking, { marginTop: 24, paddingHorizontal: 24 }]}>
+      <Text
+        style={[styles.yourBooking, { marginTop: 24, paddingHorizontal: 24 }]}
+      >
         Booking History
       </Text>
-      {
-        history.map((e) => {
-          return (
-            <ParkingHistory 
-              key={e._id} 
-              name={e.parkingSpot.name}
-              type={e.spotDetail.type}
-              time={e.createdAt}
-              book={e.bookingFee}
-              pay={e.paymentFee}
-              status={e.status}
-            />
-          )
-        })
-      }
-      {
-        history.length === 0 && (
-          <View>
-            <Text style={{ color: '#6C757D', textAlign: 'center', fontWeight: '700', marginTop: 30 }}>Empty.</Text>
-          </View>
-        )
-      }
+      {history.map((e) => {
+        return (
+          <ParkingHistory
+            key={e._id}
+            name={e.parkingSpot.name}
+            type={e.spotDetail.type}
+            time={e.createdAt}
+            book={e.bookingFee}
+            pay={e.paymentFee}
+            status={e.status}
+          />
+        );
+      })}
+      {history.length === 0 && (
+        <View>
+          <Text
+            style={{
+              color: "#6C757D",
+              textAlign: "center",
+              fontWeight: "700",
+              marginTop: 30,
+            }}
+          >
+            Empty.
+          </Text>
+        </View>
+      )}
       <View style={{ marginBottom: 120 }} />
     </ScrollView>
   );
@@ -115,6 +138,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   containerActive: {
-    paddingHorizontal: 24
-  }
+    paddingHorizontal: 24,
+  },
 });
